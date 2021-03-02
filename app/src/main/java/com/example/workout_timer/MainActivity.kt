@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, routineArray)
         listView.adapter = adapter
 
-        // 'add' button
+        // 'add' button -- TODO (does not work)
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
 //            var routineElements = mutableListOf<RoutineElement>()
 //            routineElements.add(RoutineElement(("pose 1"), 10))
