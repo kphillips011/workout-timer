@@ -6,17 +6,52 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
+import android.widget.ListView
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var listView: ListView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+        // ref: https://www.raywenderlich.com/155-android-listview-tutorial-with-kotlin
+        listView = findViewById<ListView>(R.id.routine_list)
+        var routineList = mutableListOf<Routine>()
+
+        // add elements here
+        routineList.add(Routine(mutableListOf<RoutineElement>(), "yoga flow"))
+        routineList.add(Routine(mutableListOf<RoutineElement>(), "core workout"))
+        routineList.add(Routine(mutableListOf<RoutineElement>(), "get swol"))
+        routineList.add(Routine(mutableListOf<RoutineElement>(), "intense butt workout"))
+        routineList.add(Routine(mutableListOf<RoutineElement>(), "leg day"))
+        routineList.add(Routine(mutableListOf<RoutineElement>(), "weights"))
+        routineList.add(Routine(mutableListOf<RoutineElement>(), "mondays"))
+        routineList.add(Routine(mutableListOf<RoutineElement>(), "easy peasy"))
+        routineList.add(Routine(mutableListOf<RoutineElement>(), "lemon squeezy"))
+        routineList.add(Routine(mutableListOf<RoutineElement>(), "need more workouts"))
+        routineList.add(Routine(mutableListOf<RoutineElement>(), "abs. just sayin"))
+        routineList.add(Routine(mutableListOf<RoutineElement>(), "swimming in the pool"))
+        routineList.add(Routine(mutableListOf<RoutineElement>(), "walking up the stairs"))
+        routineList.add(Routine(mutableListOf<RoutineElement>(), "core 2"))
+        routineList.add(Routine(mutableListOf<RoutineElement>(), "impress the ladies and lads"))
+
+        var routineArray = arrayOfNulls<String>(routineList.size)
+
+        for (i in 0 until routineList.size) {
+            val routine = routineList[i]
+            routineArray[i] = routine.getName()
+        }
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, routineArray)
+        listView.adapter = adapter
+
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+//            var routineElements = mutableListOf<RoutineElement>()
+//            routineElements.add(RoutineElement(("pose 1"), 10))
+//            routineList.add(Routine(routineElements, "yoga"))
         }
     }
 
