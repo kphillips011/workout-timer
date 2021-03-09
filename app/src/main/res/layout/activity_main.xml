@@ -11,7 +11,6 @@
         android:id="@+id/appBarLayout4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/purple_500"
         android:theme="@style/Theme.Workouttimer.AppBarOverlay"
         app:layout_constraintStart_toStartOf="@+id/include4"
         app:layout_constraintTop_toTopOf="parent">
