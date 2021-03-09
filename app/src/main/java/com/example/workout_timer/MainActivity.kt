@@ -40,26 +40,16 @@ class MainActivity : AppCompatActivity() {
         routineList.add(Routine(mutableListOf<RoutineElement>(), "core 2"))
         routineList.add(Routine(mutableListOf<RoutineElement>(), "impress the ladies and lads"))
 
-        /*
-         * routineList elements added into routineArray to then be adapted into the list shown
-         * on screen
-         */
-        var routineArray = arrayOfNulls<String>(routineList.size)
-
-        for (i in 0 until routineList.size) {
-            val routine = routineList[i]
-            routineArray[i] = routine.getName()
-        }
-
-        // adapter to adapt the routineArray into our list on the main screen
-        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, routineArray)
+        // adapter to adapt the routineList into our list on the main screen
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, routineList)
         listView.adapter = adapter
 
         // 'add' button -- TODO (does not work)
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
-//            var routineElements = mutableListOf<RoutineElement>()
-//            routineElements.add(RoutineElement(("pose 1"), 10))
-//            routineList.add(Routine(routineElements, "yoga"))
+            Snackbar.make(view, "Added new workout", Snackbar.LENGTH_LONG).setAction("Action", null).show()
+            // add stuff in here to input name of new routine to be added
+            routineList.add(Routine(mutableListOf<RoutineElement>(), "Added workout via add button"))
+            adapter.notifyDataSetChanged()
         }
     }
 
