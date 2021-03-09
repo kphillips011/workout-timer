@@ -7,7 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.ListView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,12 +48,22 @@ class MainActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, routineList)
         listView.adapter = adapter
 
-        // 'add' button to add a new workout -- need to configure user input
+        // 'add' button to add a new workout
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
-            Snackbar.make(view, "Added new workout", Snackbar.LENGTH_LONG).setAction("Action", null).show()
             // add stuff in here to input name of new routine to be added
-            routineList.add(Routine(mutableListOf<RoutineElement>(), "Added workout via add button"))
-            adapter.notifyDataSetChanged()
+            // ref: https://www.journaldev.com/309/android-alert-dialog-using-kotlin
+            val builder = AlertDialog.Builder(this)
+            val inflater = layoutInflater
+            builder.setTitle("Please enter a name for your workout: ")
+            val dialogLayout = inflater.inflate(R.layout.alert_dialog_with_edittext, null)
+            val editText  = dialogLayout.findViewById<EditText>(R.id.editText)
+            builder.setView(dialogLayout)
+            builder.setPositiveButton("OK") { dialogInterface, i ->
+                routineList.add(Routine(mutableListOf<RoutineElement>(), editText.text.toString()))
+                adapter.notifyDataSetChanged()
+                Snackbar.make(view, "Added new workout", Snackbar.LENGTH_LONG).setAction("Action", null).show()
+            }
+            builder.show()
         }
     }
 
