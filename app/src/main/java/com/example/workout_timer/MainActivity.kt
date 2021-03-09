@@ -1,17 +1,19 @@
 package com.example.workout_timer
 
+import android.content.DialogInterface
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.AdapterView.OnItemLongClickListener
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import android.widget.Toast
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,6 +25,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         // ref: https://www.raywenderlich.com/155-android-listview-tutorial-with-kotlin
+        //      https://www.raywenderlich.com/1364094-android-fragments-tutorial-an-introduction-with-kotlin
         // create routineList, a Routine object
         listView = findViewById<ListView>(R.id.routine_list)
         var routineList = mutableListOf<Routine>()
@@ -48,6 +51,30 @@ class MainActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, routineList)
         listView.adapter = adapter
 
+        listView.setOnItemClickListener { _, _, i, _ ->
+            val selectedWorkout =  routineList[i]
+            val selectedWorkoutElements = selectedWorkout.getElements()
+        }
+
+        listView.setOnItemLongClickListener(OnItemLongClickListener { _, view, i, _ ->
+            val builder = AlertDialog.Builder(this)
+            val inflater = layoutInflater
+            builder.setTitle("Are you sure you want to delete this workout?")
+            // if yes, deletes
+            builder.setPositiveButton("OK") { _,_ ->
+                adapter.remove(routineList[i])
+                adapter.notifyDataSetChanged()
+                Snackbar.make(view, "Workout removed", Snackbar.LENGTH_LONG).setAction(
+                    "Action",
+                    null
+                ).show()
+            }
+            // if no, does nothing
+            builder.setNegativeButton("CANCEL") { _,_ -> }
+            builder.show()
+            false
+        })
+
         // 'add' button to add a new workout
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
             // add stuff in here to input name of new routine to be added
@@ -61,7 +88,10 @@ class MainActivity : AppCompatActivity() {
             builder.setPositiveButton("OK") { dialogInterface, i ->
                 routineList.add(Routine(mutableListOf<RoutineElement>(), editText.text.toString()))
                 adapter.notifyDataSetChanged()
-                Snackbar.make(view, "Added new workout", Snackbar.LENGTH_LONG).setAction("Action", null).show()
+                Snackbar.make(view, "Added new workout", Snackbar.LENGTH_LONG).setAction(
+                    "Action",
+                    null
+                ).show()
             }
             builder.show()
         }
