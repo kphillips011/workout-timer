@@ -4,7 +4,7 @@ package com.example.workout_timer
  * Routine object holds the entire list of different workout Routines
  */
 class Routine(private var elements: MutableList<RoutineElement>, private var name: String) {
-    val identifier: String = this.getName()
+    private val identifier: String = this.getName()
     fun getName() = name
     fun getElements() = elements
     fun renameRoutine(newName: String) { name = newName }
