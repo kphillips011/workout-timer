@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, routineList)
         listView.adapter = adapter
 
-        // 'add' button -- TODO (does not work)
+        // 'add' button to add a new workout -- need to configure user input
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
             Snackbar.make(view, "Added new workout", Snackbar.LENGTH_LONG).setAction("Action", null).show()
             // add stuff in here to input name of new routine to be added
