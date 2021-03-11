@@ -22,21 +22,44 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/Theme.Workouttimer.PopupOverlay" />
 
-        <ListView
-            android:id="@+id/routine_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:longClickable="true"
-            android:paddingTop="10px"
-            android:paddingBottom="10px"
-            app:layout_constraintBottom_toBottomOf="@id/toolbar"
-            app:layout_constraintStart_toStartOf="@id/toolbar"
-            app:layout_constraintTop_toTopOf="@id/toolbar"
-            tools:visibility="visible">
+        <ViewSwitcher
+            android:id="@+id/viewSwitcher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        </ListView>
+            <ListView
+                android:id="@+id/routine_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:longClickable="true"
+                android:paddingTop="10px"
+                android:paddingBottom="10px"
+                app:layout_constraintBottom_toBottomOf="@id/toolbar"
+                app:layout_constraintStart_toStartOf="@id/toolbar"
+                app:layout_constraintTop_toTopOf="@id/toolbar"
+                tools:visibility="visible">
+
+            </ListView>
+
+            <ListView
+                android:id="@+id/routine_elements"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:longClickable="true"
+                android:paddingTop="10px"
+                android:paddingBottom="10px"
+                app:layout_constraintBottom_toBottomOf="@id/toolbar"
+                app:layout_constraintStart_toStartOf="@id/toolbar"
+                app:layout_constraintTop_toTopOf="@id/toolbar"
+                tools:visibility="visible">
+
+            </ListView>
+
+        </ViewSwitcher>
 
     </com.google.android.material.appbar.AppBarLayout>
 

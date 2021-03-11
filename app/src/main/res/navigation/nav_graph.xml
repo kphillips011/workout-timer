@@ -3,26 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
-
+    app:startDestination="@id/routineListFragment">
     <fragment
-        android:id="@+id/FirstFragment"
+        android:id="@+id/routineListFragment"
+        android:name="com.example.workout_timer.RoutineListFragment"
+        android:label="fragment_routine_list"
+        tools:layout="@layout/fragment_routine_list" />
+    <fragment
+        android:id="@+id/routineElementsFragment"
         android:name="com.example.workout_timer.RoutineElementsFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_routine_elements">
-
-        <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
-    </fragment>
+        android:label="fragment_routine_elements"
+        tools:layout="@layout/fragment_routine_elements" />
     <fragment
-        android:id="@+id/SecondFragment"
+        android:id="@+id/elementDetailFragment2"
         android:name="com.example.workout_timer.ElementDetailFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_element_detail">
-
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
-    </fragment>
+        android:label="fragment_element_detail"
+        tools:layout="@layout/fragment_element_detail" />
 </navigation>

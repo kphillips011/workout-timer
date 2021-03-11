@@ -17,8 +17,10 @@ class Routine(private var elements: MutableList<RoutineElement>, private var nam
  * RoutineElement object holds the entire list of poses/reps within a workout Routine
  */
 class RoutineElement(private var name: String, private var duration: Int) {
+    private val identifier: String = this.getName()
     fun getName() = name
     fun getDuration() = duration
     fun rename(newName: String) { name = newName }
     fun editDuration(newDuration: Int) { duration = newDuration }
+    override fun toString() = identifier
 }
