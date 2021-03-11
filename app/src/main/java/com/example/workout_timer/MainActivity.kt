@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
                 builder.setPositiveButton("OK") { _, _ ->
                     elementsListAdapter.remove(elementsList[i])
                     elementsListAdapter.notifyDataSetChanged()
-                    Snackbar.make(elementsListView, "Workout removed", Snackbar.LENGTH_LONG).setAction(
+                    Snackbar.make(elementsListView, "Element removed", Snackbar.LENGTH_LONG).setAction(
                         "Action",
                         null
                     ).show()
