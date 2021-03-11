@@ -4,6 +4,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
+        val fab: View = findViewById(R.id.fab)
 
         // ref: https://tutorialwing.com/android-viewswitcher-using-kotlin-example/
         viewSwitcher = findViewById<ViewSwitcher>(R.id.viewSwitcher)
@@ -81,7 +83,6 @@ class MainActivity : AppCompatActivity() {
 
             elementsListView.onItemLongClickListener = OnItemLongClickListener { _, elementsListView, i, _ ->
                 val builder = AlertDialog.Builder(this)
-                val inflater = layoutInflater
                 builder.setTitle("Are you sure you want to delete this element?")
                 // if yes, deletes
                 builder.setPositiveButton("OK") { _, _ ->
@@ -99,40 +100,42 @@ class MainActivity : AppCompatActivity() {
             }
 
             // 'add' button to add a new element
-            findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { elementsListView ->
-                val builder = AlertDialog.Builder(this)
-                val inflater = layoutInflater
-                builder.setTitle("Please enter a workout element: ")
-                val dialogLayout = inflater.inflate(R.layout.alert_dialog_with_edittext, null)
-                val editText = dialogLayout.findViewById<EditText>(R.id.editText)
-                builder.setView(dialogLayout)
-                builder.setPositiveButton("OK") { dialogInterface, i ->
-                    elementsList.add(
-                        RoutineElement(
-                            editText.text.toString(),
-                            0
+            fab.setOnClickListener() { view ->
+                if (viewSwitcher.currentView.equals(elementsListView)) {
+                    val elementBuilder = AlertDialog.Builder(this)
+                    val elementInflater = layoutInflater
+                    elementBuilder.setTitle("Please enter a name for your element: ")
+                    val dialogLayout = elementInflater.inflate(R.layout.alert_dialog_with_edittext, null)
+                    val editText2 = dialogLayout.findViewById<EditText>(R.id.editText)
+                    elementBuilder.setView(dialogLayout)
+                    elementBuilder.setPositiveButton("OK") { dialogInterface, i ->
+                        elementsList.add(
+                            RoutineElement(
+                                editText2.text.toString(),
+                                0
+                            )
                         )
-                    )
-                    elementsListAdapter.notifyDataSetChanged()
-                    Snackbar.make(elementsListView, "Added new element", Snackbar.LENGTH_LONG).setAction(
-                        "Action",
-                        null
-                    ).show()
+                        elementsListAdapter.notifyDataSetChanged()
+                        Snackbar.make(elementsListView, "Added new element", Snackbar.LENGTH_LONG)
+                            .setAction(
+                                "Action",
+                                null
+                            ).show()
+                    }
+                    elementBuilder.setNegativeButton("CANCEL") { _, _ -> }
+                    elementBuilder.show()
                 }
-                builder.setNegativeButton("CANCEL") { _, _ -> }
-                builder.show()
             }
         }
 
-        routineListView.onItemLongClickListener = OnItemLongClickListener { _, view, i, _ ->
+        routineListView.onItemLongClickListener = OnItemLongClickListener { _, routineListView, i, _ ->
             val builder = AlertDialog.Builder(this)
-            val inflater = layoutInflater
             builder.setTitle("Are you sure you want to delete this workout?")
             // if yes, deletes
             builder.setPositiveButton("OK") { _, _ ->
                 routineListAdapter.remove(routineList[i])
                 routineListAdapter.notifyDataSetChanged()
-                Snackbar.make(view, "Workout removed", Snackbar.LENGTH_LONG).setAction(
+                Snackbar.make(routineListView, "Workout removed", Snackbar.LENGTH_LONG).setAction(
                     "Action",
                     null
                 ).show()
@@ -144,38 +147,42 @@ class MainActivity : AppCompatActivity() {
         }
 
         // 'add' button to add a new workout
-        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { routineListView ->
-            // add stuff in here to input name of new routine to be added
-            // ref: https://www.journaldev.com/309/android-alert-dialog-using-kotlin
-            val builder = AlertDialog.Builder(this)
-            val inflater = layoutInflater
-            builder.setTitle("Please enter a name for your workout: ")
-            val dialogLayout = inflater.inflate(R.layout.alert_dialog_with_edittext, null)
-            val editText = dialogLayout.findViewById<EditText>(R.id.editText)
-            builder.setView(dialogLayout)
-            builder.setPositiveButton("OK") { dialogInterface, i ->
-                routineList.add(
-                    Routine(
-                        mutableListOf<RoutineElement>(),
-                        editText.text.toString()
+        fab.setOnClickListener { view ->
+            if (viewSwitcher.currentView.equals(routineListView)) {
+                // add stuff in here to input name of new routine to be added
+                // ref: https://www.journaldev.com/309/android-alert-dialog-using-kotlin
+                val workoutBuilder = AlertDialog.Builder(this)
+                val workoutInflater = layoutInflater
+                workoutBuilder.setTitle("Please enter a name for your workout: ")
+                val dialogLayout = workoutInflater.inflate(R.layout.alert_dialog_with_edittext, null)
+                val editText = dialogLayout.findViewById<EditText>(R.id.editText)
+                workoutBuilder.setView(dialogLayout)
+                workoutBuilder.setPositiveButton("OK") { dialogInterface, i ->
+                    routineList.add(
+                        Routine(
+                            mutableListOf<RoutineElement>(),
+                            editText.text.toString()
+                        )
                     )
-                )
-                routineListAdapter.notifyDataSetChanged()
-                Snackbar.make(routineListView, "Added new workout", Snackbar.LENGTH_LONG)
-                    .setAction(
-                        "Action",
-                        null
-                    ).show()
+                    routineListAdapter.notifyDataSetChanged()
+                    Snackbar.make(routineListView, "Added new workout", Snackbar.LENGTH_LONG)
+                        .setAction(
+                            "Action",
+                            null
+                        ).show()
+                }
+                workoutBuilder.setNegativeButton("CANCEL") { _, _ -> }
+                workoutBuilder.show()
             }
-            builder.setNegativeButton("CANCEL") { _, _ -> }
-            builder.show()
         }
     }
 
     // if android back button is pressed while on the elements list, we want
     // to go back to the main screen where the routine list is displayed
     override fun onBackPressed() {
-        if (viewSwitcher.currentView.equals(elementsListView)) { viewSwitcher.showNext() }
+        if (viewSwitcher.currentView.equals(elementsListView)) {
+            viewSwitcher.showNext()
+        }
         else { this.finish() }
     }
 
