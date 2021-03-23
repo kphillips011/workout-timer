@@ -25,7 +25,8 @@
         <ViewSwitcher
             android:id="@+id/viewSwitcher"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="?attr/colorOnSecondary">
 
             <ListView
                 android:id="@+id/routine_list"
@@ -62,17 +63,23 @@
 
         </ViewSwitcher>
 
-        <LinearLayout
-            android:id="@+id/element_details"
-            android:background="#a6e1aa"
-            android:orientation="vertical"
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
-            android:layout_height="200dp">
-
-        </LinearLayout>
-
     </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/element_details"
+        android:background="#a6e1aa"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:elevation="10dp">
+
+        <TextView
+            android:id="@+id/details_text_view"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+    </LinearLayout>
 
     <include
         android:id="@+id/include4"

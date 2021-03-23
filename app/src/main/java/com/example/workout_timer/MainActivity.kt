@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         elementDetailsView = findViewById<LinearLayout>(R.id.element_details)
         elementDetailsView.visibility = View.INVISIBLE
         var elementDetailsUp: Boolean = false
+        val detailsText: TextView = findViewById(R.id.details_text_view);
 
         // ref: https://www.raywenderlich.com/155-android-listview-tutorial-with-kotlin
         //      https://www.raywenderlich.com/1364094-android-fragments-tutorial-an-introduction-with-kotlin
@@ -71,6 +72,7 @@ class MainActivity : AppCompatActivity() {
         val routineListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, routineList)
         routineListView.adapter = routineListAdapter
 
+
         routineListView.setOnItemClickListener { _, routineListView, i, _ ->
             val selectedWorkout = routineList[i]
             var elementsList = selectedWorkout.getElements()
@@ -80,6 +82,9 @@ class MainActivity : AppCompatActivity() {
 
             elementsListView.setOnItemClickListener { _, _, i, _ ->
                 // TODO fill elementDetailsView with element details, image etc
+                val selectedElement = elementsList[i]
+                detailsText.text = selectedElement.getName()
+
                 // slide view up
                 if (!elementDetailsUp) {
                     elementDetailsView.visibility = View.VISIBLE
@@ -91,6 +96,7 @@ class MainActivity : AppCompatActivity() {
                     animate.duration = 500
                     animate.fillAfter = true
                     elementDetailsView.startAnimation(animate)
+                    elementDetailsUp = true
                 }
             }
 
@@ -220,7 +226,7 @@ class MainActivity : AppCompatActivity() {
             if (elementDetailsUp) {
                 slideDownDetails(elementDetailsView)
                 elementDetailsUp = false
-            } else {viewSwitcher.showNext() }
+            } else { viewSwitcher.showNext() }
         }
         else { this.finish() }
     }
