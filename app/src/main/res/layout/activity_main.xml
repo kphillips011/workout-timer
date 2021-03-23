@@ -67,7 +67,7 @@
 
     <LinearLayout
         android:id="@+id/element_details"
-        android:background="#a6e1aa"
+        android:background="?attr/colorSecondaryVariant"
         android:orientation="vertical"
         android:layout_alignParentBottom="false"
         app:layout_constraintBottom_toBottomOf="parent"

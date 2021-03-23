@@ -37,7 +37,6 @@ class MainActivity : AppCompatActivity() {
         // ref: https://stackoverflow.com/questions/19765938/show-and-hide-a-view-with-a-slide-up-down-animation
         elementDetailsView = findViewById<LinearLayout>(R.id.element_details)
         elementDetailsView.visibility = View.INVISIBLE
-        var elementDetailsUp: Boolean = false
         val detailsText: TextView = findViewById(R.id.details_text_view);
 
         // ref: https://www.raywenderlich.com/155-android-listview-tutorial-with-kotlin
@@ -225,8 +224,11 @@ class MainActivity : AppCompatActivity() {
         if (viewSwitcher.currentView.equals(elementsListView)) {
             if (elementDetailsUp) {
                 slideDownDetails(elementDetailsView)
+                elementDetailsView.visibility = View.INVISIBLE
                 elementDetailsUp = false
-            } else { viewSwitcher.showNext() }
+            } else {
+                viewSwitcher.showNext()
+            }
         }
         else { this.finish() }
     }
