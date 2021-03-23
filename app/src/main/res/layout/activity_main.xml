@@ -31,6 +31,7 @@
                 android:id="@+id/routine_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:cacheColorHint="#FFFFFF"
                 android:clickable="true"
                 android:focusable="true"
                 android:longClickable="true"
@@ -60,6 +61,16 @@
             </ListView>
 
         </ViewSwitcher>
+
+        <LinearLayout
+            android:id="@+id/element_details"
+            android:background="#a6e1aa"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+        </LinearLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 

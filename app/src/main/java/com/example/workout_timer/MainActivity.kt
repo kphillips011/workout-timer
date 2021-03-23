@@ -1,22 +1,16 @@
 package com.example.workout_timer
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.view.animation.TranslateAnimation
 import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import androidx.annotation.Nullable
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.viewpager.widget.ViewPager
 
 
 class MainActivity : AppCompatActivity() {
@@ -24,6 +18,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var routineListView: ListView
     private lateinit var elementsListView: ListView
     private lateinit var viewSwitcher: ViewSwitcher
+    private lateinit var elementDetailsView: View
+    private var elementDetailsUp: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +33,11 @@ class MainActivity : AppCompatActivity() {
         viewSwitcher.inAnimation = `in`
         val out = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right)
         viewSwitcher.outAnimation = out
+
+        // ref: https://stackoverflow.com/questions/19765938/show-and-hide-a-view-with-a-slide-up-down-animation
+        elementDetailsView = findViewById<LinearLayout>(R.id.element_details)
+        elementDetailsView.visibility = View.INVISIBLE
+        var elementDetailsUp: Boolean = false
 
         // ref: https://www.raywenderlich.com/155-android-listview-tutorial-with-kotlin
         //      https://www.raywenderlich.com/1364094-android-fragments-tutorial-an-introduction-with-kotlin
@@ -78,7 +79,19 @@ class MainActivity : AppCompatActivity() {
             viewSwitcher.showNext()
 
             elementsListView.setOnItemClickListener { _, _, i, _ ->
-                // TODO
+                // TODO fill elementDetailsView with element details, image etc
+                // slide view up
+                if (!elementDetailsUp) {
+                    elementDetailsView.visibility = View.VISIBLE
+                    val animate = TranslateAnimation(
+                            0F,  // fromXDelta
+                            0F,  // toXDelta
+                            elementDetailsView.height.toFloat(),  // fromYDelta
+                            0F) // toYDelta
+                    animate.duration = 500
+                    animate.fillAfter = true
+                    elementDetailsView.startAnimation(animate)
+                }
             }
 
             elementsListView.onItemLongClickListener = OnItemLongClickListener { _, elementsListView, i, _ ->
@@ -89,8 +102,8 @@ class MainActivity : AppCompatActivity() {
                     elementsListAdapter.remove(elementsList[i])
                     elementsListAdapter.notifyDataSetChanged()
                     Snackbar.make(elementsListView, "Element removed", Snackbar.LENGTH_LONG).setAction(
-                        "Action",
-                        null
+                            "Action",
+                            null
                     ).show()
                 }
                 // if no, does nothing
@@ -110,22 +123,33 @@ class MainActivity : AppCompatActivity() {
                     elementBuilder.setView(dialogLayout)
                     elementBuilder.setPositiveButton("OK") { dialogInterface, i ->
                         elementsList.add(
-                            RoutineElement(
-                                editText2.text.toString(),
-                                0
-                            )
+                                RoutineElement(
+                                        editText2.text.toString(),
+                                        0
+                                )
                         )
                         elementsListAdapter.notifyDataSetChanged()
                         Snackbar.make(elementsListView, "Added new element", Snackbar.LENGTH_LONG)
                             .setAction(
-                                "Action",
-                                null
+                                    "Action",
+                                    null
                             ).show()
                     }
                     elementBuilder.setNegativeButton("CANCEL") { _, _ -> }
                     elementBuilder.show()
                 }
             }
+        }
+
+        fun slideDownDetails(view: View) {
+            val animate = TranslateAnimation(
+                    0F,  // fromXDelta
+                    0F,  // toXDelta
+                    0F,  // fromYDelta
+                    view.height.toFloat()) // toYDelta
+            animate.duration = 500
+            animate.fillAfter = true
+            view.startAnimation(animate)
         }
 
         routineListView.onItemLongClickListener = OnItemLongClickListener { _, routineListView, i, _ ->
@@ -136,8 +160,8 @@ class MainActivity : AppCompatActivity() {
                 routineListAdapter.remove(routineList[i])
                 routineListAdapter.notifyDataSetChanged()
                 Snackbar.make(routineListView, "Workout removed", Snackbar.LENGTH_LONG).setAction(
-                    "Action",
-                    null
+                        "Action",
+                        null
                 ).show()
             }
             // if no, does nothing
@@ -159,16 +183,16 @@ class MainActivity : AppCompatActivity() {
                 workoutBuilder.setView(dialogLayout)
                 workoutBuilder.setPositiveButton("OK") { dialogInterface, i ->
                     routineList.add(
-                        Routine(
-                            mutableListOf<RoutineElement>(),
-                            editText.text.toString()
-                        )
+                            Routine(
+                                    mutableListOf<RoutineElement>(),
+                                    editText.text.toString()
+                            )
                     )
                     routineListAdapter.notifyDataSetChanged()
                     Snackbar.make(routineListView, "Added new workout", Snackbar.LENGTH_LONG)
                         .setAction(
-                            "Action",
-                            null
+                                "Action",
+                                null
                         ).show()
                 }
                 workoutBuilder.setNegativeButton("CANCEL") { _, _ -> }
@@ -177,11 +201,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // slide the view from its current position to below itself
+    private fun slideDownDetails(view: View) {
+        val animate = TranslateAnimation(
+                0F,  // fromXDelta
+                0F,  // toXDelta
+                0F,  // fromYDelta
+                view.height.toFloat()) // toYDelta
+        animate.duration = 500
+        animate.fillAfter = true
+        view.startAnimation(animate)
+    }
+
     // if android back button is pressed while on the elements list, we want
     // to go back to the main screen where the routine list is displayed
     override fun onBackPressed() {
         if (viewSwitcher.currentView.equals(elementsListView)) {
-            viewSwitcher.showNext()
+            if (elementDetailsUp) {
+                slideDownDetails(elementDetailsView)
+                elementDetailsUp = false
+            } else {viewSwitcher.showNext() }
         }
         else { this.finish() }
     }
