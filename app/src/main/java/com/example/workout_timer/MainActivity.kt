@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var elementsListView: ListView
     private lateinit var viewSwitcher: ViewSwitcher
     private lateinit var elementDetailsView: View
+    private lateinit var fab: View
     private lateinit var playButton: MenuItem
     private var elementDetailsUp: Boolean = false
 
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
-        val fab: View = findViewById(R.id.fab)
+        fab = findViewById(R.id.fab)
 
         // ref: https://tutorialwing.com/android-viewswitcher-using-kotlin-example/
         viewSwitcher = findViewById<ViewSwitcher>(R.id.viewSwitcher)
@@ -131,15 +132,16 @@ class MainActivity : AppCompatActivity() {
                 if (viewSwitcher.currentView.equals(elementsListView)) {
                     val elementBuilder = AlertDialog.Builder(this)
                     val elementInflater = layoutInflater
-                    elementBuilder.setTitle("Please enter a name for your element: ")
+                    elementBuilder.setTitle("Please enter a name and duration for your element: ")
                     val dialogLayout = elementInflater.inflate(R.layout.alert_dialog_with_edittext, null)
-                    val editText2 = dialogLayout.findViewById<EditText>(R.id.editText)
+                    var editTextName = dialogLayout.findViewById<EditText>(R.id.editTextName)
+                    var editTextDuration = dialogLayout.findViewById<EditText>(R.id.editTextDuration)
                     elementBuilder.setView(dialogLayout)
                     elementBuilder.setPositiveButton("OK") { dialogInterface, i ->
                         elementsList.add(
                                 RoutineElement(
-                                        editText2.text.toString(),
-                                        0
+                                        editTextName.text.toString(),
+                                        editTextDuration.text.toString().toInt()
                                 )
                         )
                         elementsListAdapter.notifyDataSetChanged()
@@ -179,13 +181,15 @@ class MainActivity : AppCompatActivity() {
                 val workoutInflater = layoutInflater
                 workoutBuilder.setTitle("Please enter a name for your workout: ")
                 val dialogLayout = workoutInflater.inflate(R.layout.alert_dialog_with_edittext, null)
-                val editText = dialogLayout.findViewById<EditText>(R.id.editText)
+                var editTextName = dialogLayout.findViewById<EditText>(R.id.editTextName)
+                var editTextDuration = dialogLayout.findViewById<EditText>(R.id.editTextDuration)
+                editTextDuration.visibility = View.GONE
                 workoutBuilder.setView(dialogLayout)
                 workoutBuilder.setPositiveButton("OK") { dialogInterface, i ->
                     routineList.add(
                             Routine(
                                     mutableListOf<RoutineElement>(),
-                                    editText.text.toString()
+                                    editTextName.text.toString()
                             )
                     )
                     routineListAdapter.notifyDataSetChanged()
