@@ -65,6 +65,16 @@ class MainActivity : AppCompatActivity() {
 
         routineList[0].addElement(RoutineElement("yoga 1", 0))
         routineList[0].addElement(RoutineElement("yoga 2", 5))
+        routineList[0].addElement(RoutineElement("yoga 3", 0))
+        routineList[0].addElement(RoutineElement("yoga 4", 500))
+        routineList[0].addElement(RoutineElement("yoga 5", 0))
+        routineList[0].addElement(RoutineElement("yoga 6", 5))
+        routineList[0].addElement(RoutineElement("yoga 7", 0))
+        routineList[0].addElement(RoutineElement("yoga 8", 5))
+        routineList[0].addElement(RoutineElement("yoga 9", 3))
+        routineList[0].addElement(RoutineElement("yoga 10", 5))
+        routineList[0].addElement(RoutineElement("yoga 11", 0))
+        routineList[0].addElement(RoutineElement("yoga 12", 5))
         routineList[4].addElement(RoutineElement("leg day 1", 10))
 
         // adapter to adapt the routineList into our list on the main screen
@@ -73,6 +83,8 @@ class MainActivity : AppCompatActivity() {
 
         routineListView.setOnItemClickListener { _, routineListView, i, _ ->
             val selectedWorkout = routineList[i]
+            // set toolbar title to be the routine's name
+            (this as? AppCompatActivity)?.supportActionBar?.title = selectedWorkout.getName()
             var elementsList = selectedWorkout.getElements()
             val elementsListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, elementsList)
             elementsListView.adapter = elementsListAdapter
@@ -221,6 +233,8 @@ class MainActivity : AppCompatActivity() {
                 elementDetailsUp = false
             } else {
                 viewSwitcher.showNext()
+                // set title on toolbar back to workout timer
+                (this as? AppCompatActivity)?.supportActionBar?.title = title
             }
         }
         else { this.finish() }
