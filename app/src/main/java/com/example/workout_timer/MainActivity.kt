@@ -10,6 +10,8 @@ import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -19,15 +21,25 @@ class MainActivity : AppCompatActivity() {
     private lateinit var elementsListView: ListView
     private lateinit var viewSwitcher: ViewSwitcher
     private lateinit var elementDetailsView: View
-    private lateinit var fab: View
+    private lateinit var fab: ExtendedFloatingActionButton
+    private lateinit var presetFab: FloatingActionButton
+    private lateinit var customFab: FloatingActionButton
+    private lateinit var presetActionText: TextView
+    private lateinit var customActionText: TextView
     private lateinit var playButton: MenuItem
     private var elementDetailsUp: Boolean = false
+    private var allFabsVisible: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
         fab = findViewById(R.id.fab)
+        presetFab = findViewById(R.id.add_preset_fab)
+        customFab = findViewById(R.id.add_custom_fab)
+        presetActionText = findViewById(R.id.add_preset_action_text)
+        customActionText = findViewById(R.id.add_custom_action_text)
+        closeFab()
 
         // ref: https://tutorialwing.com/android-viewswitcher-using-kotlin-example/
         viewSwitcher = findViewById<ViewSwitcher>(R.id.viewSwitcher)
@@ -130,27 +142,30 @@ class MainActivity : AppCompatActivity() {
             // 'add' button to add a new element
             fab.setOnClickListener() { view ->
                 if (viewSwitcher.currentView.equals(elementsListView)) {
-                    val elementBuilder = AlertDialog.Builder(this)
-                    val elementInflater = layoutInflater
-                    elementBuilder.setTitle("Please enter a name and duration for your element: ")
-                    val dialogLayout = elementInflater.inflate(R.layout.alert_dialog_with_edittext, null)
-                    var editTextName = dialogLayout.findViewById<EditText>(R.id.editTextName)
-                    var editTextDuration = dialogLayout.findViewById<EditText>(R.id.editTextDuration)
-                    elementBuilder.setView(dialogLayout)
-                    elementBuilder.setPositiveButton("OK") { dialogInterface, i ->
-                        elementsList.add(
-                                RoutineElement(
-                                        editTextName.text.toString(),
-                                        editTextDuration.text.toString().toInt()
-                                )
-                        )
-                        elementsListAdapter.notifyDataSetChanged()
-                        Snackbar.make(elementsListView, "Added new element", Snackbar.LENGTH_LONG)
-                                .setAction("DISMISS") {}
-                                .show()
-                    }
-                    elementBuilder.setNegativeButton("CANCEL") { _, _ -> }
-                    elementBuilder.show()
+                    if (!allFabsVisible) {
+                        expandFab("Add Preset Element", "Add Custom Element")
+                        val elementBuilder = AlertDialog.Builder(this)
+                        val elementInflater = layoutInflater
+                        elementBuilder.setTitle("Please enter a name and duration for your element: ")
+                        val dialogLayout = elementInflater.inflate(R.layout.alert_dialog_with_edittext, null)
+                        var editTextName = dialogLayout.findViewById<EditText>(R.id.editTextName)
+                        var editTextDuration = dialogLayout.findViewById<EditText>(R.id.editTextDuration)
+                        elementBuilder.setView(dialogLayout)
+                        elementBuilder.setPositiveButton("OK") { dialogInterface, i ->
+                            elementsList.add(
+                                    RoutineElement(
+                                            editTextName.text.toString(),
+                                            editTextDuration.text.toString().toInt()
+                                    )
+                            )
+                            elementsListAdapter.notifyDataSetChanged()
+                            Snackbar.make(elementsListView, "Added new element", Snackbar.LENGTH_LONG)
+                                    .setAction("DISMISS") {}
+                                    .show()
+                        }
+                        elementBuilder.setNegativeButton("CANCEL") { _, _ -> }
+                        elementBuilder.show()
+                    } else { closeFab() }
                 }
             }
         }
@@ -175,32 +190,63 @@ class MainActivity : AppCompatActivity() {
         // 'add' button to add a new workout
         fab.setOnClickListener { view ->
             if (viewSwitcher.currentView.equals(routineListView)) {
-                // add stuff in here to input name of new routine to be added
-                // ref: https://www.journaldev.com/309/android-alert-dialog-using-kotlin
-                val workoutBuilder = AlertDialog.Builder(this)
-                val workoutInflater = layoutInflater
-                workoutBuilder.setTitle("Please enter a name for your workout: ")
-                val dialogLayout = workoutInflater.inflate(R.layout.alert_dialog_with_edittext, null)
-                var editTextName = dialogLayout.findViewById<EditText>(R.id.editTextName)
-                var editTextDuration = dialogLayout.findViewById<EditText>(R.id.editTextDuration)
-                editTextDuration.visibility = View.GONE
-                workoutBuilder.setView(dialogLayout)
-                workoutBuilder.setPositiveButton("OK") { dialogInterface, i ->
-                    routineList.add(
-                            Routine(
-                                    mutableListOf<RoutineElement>(),
-                                    editTextName.text.toString()
-                            )
-                    )
-                    routineListAdapter.notifyDataSetChanged()
-                    Snackbar.make(routineListView, "Added new workout", Snackbar.LENGTH_LONG)
-                            .setAction("DISMISS") {}
-                            .show()
-                }
-                workoutBuilder.setNegativeButton("CANCEL") { _, _ -> }
-                workoutBuilder.show()
+                if (!allFabsVisible) {
+                    expandFab("Add Preset Workout", "Add Custom Workout")
+                    // add stuff in here to input name of new routine to be added
+                    // ref: https://www.journaldev.com/309/android-alert-dialog-using-kotlin
+                    val workoutBuilder = AlertDialog.Builder(this)
+                    val workoutInflater = layoutInflater
+                    workoutBuilder.setTitle("Please enter a name for your workout: ")
+                    val dialogLayout = workoutInflater.inflate(R.layout.alert_dialog_with_edittext, null)
+                    var editTextName = dialogLayout.findViewById<EditText>(R.id.editTextName)
+                    var editTextDuration = dialogLayout.findViewById<EditText>(R.id.editTextDuration)
+                    editTextDuration.visibility = View.GONE
+                    workoutBuilder.setView(dialogLayout)
+                    workoutBuilder.setPositiveButton("OK") { dialogInterface, i ->
+                        routineList.add(
+                                Routine(
+                                        mutableListOf<RoutineElement>(),
+                                        editTextName.text.toString()
+                                )
+                        )
+                        routineListAdapter.notifyDataSetChanged()
+                        Snackbar.make(routineListView, "Added new workout", Snackbar.LENGTH_LONG)
+                                .setAction("DISMISS") {}
+                                .show()
+                    }
+                    workoutBuilder.setNegativeButton("CANCEL") { _, _ -> }
+                    workoutBuilder.show()
+                } else { closeFab() }
             }
         }
+
+        customFab.setOnClickListener { view ->
+            // TODO
+        }
+
+        presetFab.setOnClickListener { view ->
+            // TODO
+        }
+    }
+
+    private fun expandFab(pt: String, ct: String) {
+        presetActionText.text = pt
+        customActionText.text = ct
+        presetFab.show()
+        customFab.show()
+        presetActionText.visibility = View.VISIBLE
+        customActionText.visibility = View.VISIBLE
+        fab.extend()
+        allFabsVisible = true
+    }
+
+    private fun closeFab() {
+        presetFab.hide()
+        customFab.hide()
+        presetActionText.visibility = View.GONE
+        customActionText.visibility = View.GONE
+        fab.shrink()
+        allFabsVisible = false
     }
 
     // slide the view from its current position to below itself

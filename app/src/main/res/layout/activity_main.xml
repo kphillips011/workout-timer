@@ -96,19 +96,61 @@
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout4"
         app:layout_constraintVertical_bias="0.0" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="end"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        android:contentDescription="TODO"
-        android:visibility="visible"
+        android:text="@string/actions"
         app:backgroundTint="@color/teal_200"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_input_add"
-        tools:visibility="visible" />
+        app:icon="@android:drawable/ic_input_add"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_custom_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/teal_200"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@+id/fab"
+        app:layout_constraintEnd_toEndOf="@+id/fab"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
+    <TextView
+        android:id="@+id/add_custom_action_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:text="@string/addCustom"
+        app:layout_constraintBottom_toBottomOf="@+id/add_custom_fab"
+        app:layout_constraintEnd_toStartOf="@+id/add_custom_fab"
+        app:layout_constraintTop_toTopOf="@+id/add_custom_fab" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_preset_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/teal_200"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@+id/add_custom_fab"
+        app:layout_constraintEnd_toEndOf="@+id/add_custom_fab"
+        app:layout_constraintStart_toStartOf="@+id/add_custom_fab"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
+    <TextView
+        android:id="@+id/add_preset_action_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:text="@string/addPreset"
+        app:layout_constraintBottom_toBottomOf="@+id/add_preset_fab"
+        app:layout_constraintEnd_toStartOf="@+id/add_preset_fab"
+        app:layout_constraintTop_toTopOf="@+id/add_preset_fab" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

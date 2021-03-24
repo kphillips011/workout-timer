@@ -11,4 +11,7 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="routine_list_header">Routines</string>
     <string name="play_button" />
+    <string name="actions">Actions</string>
+    <string name="addCustom">Add Custom</string>
+    <string name="addPreset">Add Preset</string>
 </resources>
