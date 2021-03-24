@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var elementsListView: ListView
     private lateinit var viewSwitcher: ViewSwitcher
     private lateinit var elementDetailsView: View
-    private lateinit var playButton: Button
+    private lateinit var playButton: MenuItem
     private var elementDetailsUp: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
         val fab: View = findViewById(R.id.fab)
-        //playButton = findViewById(R.id.play_button) // TODO fix, causes app crash
 
         // ref: https://tutorialwing.com/android-viewswitcher-using-kotlin-example/
         viewSwitcher = findViewById<ViewSwitcher>(R.id.viewSwitcher)
@@ -88,6 +87,7 @@ class MainActivity : AppCompatActivity() {
         routineListView.adapter = routineListAdapter
 
         routineListView.setOnItemClickListener { _, routineListView, i, _ ->
+            playButton.isVisible = true
             val selectedWorkout = routineList[i]
             // set toolbar title to be the routine's name
             (this as? AppCompatActivity)?.supportActionBar?.title = selectedWorkout.getName()
@@ -241,6 +241,7 @@ class MainActivity : AppCompatActivity() {
                 viewSwitcher.showNext()
                 // set title on toolbar back to workout timer
                 (this as? AppCompatActivity)?.supportActionBar?.title = title
+                invalidateOptionsMenu()
             }
         }
         else { this.finish() }
@@ -249,6 +250,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
+        playButton = menu.findItem(R.id.play_button)
+        playButton.isVisible = false
         return true
     }
 
