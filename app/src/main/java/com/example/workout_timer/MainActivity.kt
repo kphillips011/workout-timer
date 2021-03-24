@@ -116,10 +116,9 @@ class MainActivity : AppCompatActivity() {
                 builder.setPositiveButton("OK") { _, _ ->
                     elementsListAdapter.remove(elementsList[i])
                     elementsListAdapter.notifyDataSetChanged()
-                    Snackbar.make(elementsListView, "Element removed", Snackbar.LENGTH_LONG).setAction(
-                            "Action",
-                            null
-                    ).show()
+                    Snackbar.make(elementsListView, "Element removed", Snackbar.LENGTH_LONG)
+                            .setAction("DISMISS") {}
+                            .show()
                 }
                 // if no, does nothing
                 builder.setNegativeButton("CANCEL") { _, _ -> }
@@ -145,10 +144,8 @@ class MainActivity : AppCompatActivity() {
                         )
                         elementsListAdapter.notifyDataSetChanged()
                         Snackbar.make(elementsListView, "Added new element", Snackbar.LENGTH_LONG)
-                            .setAction(
-                                    "Action",
-                                    null
-                            ).show()
+                                .setAction("DISMISS") {}
+                                .show()
                     }
                     elementBuilder.setNegativeButton("CANCEL") { _, _ -> }
                     elementBuilder.show()
@@ -163,10 +160,9 @@ class MainActivity : AppCompatActivity() {
             builder.setPositiveButton("OK") { _, _ ->
                 routineListAdapter.remove(routineList[i])
                 routineListAdapter.notifyDataSetChanged()
-                Snackbar.make(routineListView, "Workout removed", Snackbar.LENGTH_LONG).setAction(
-                        "Action",
-                        null
-                ).show()
+                Snackbar.make(routineListView, "Workout removed", Snackbar.LENGTH_LONG)
+                        .setAction("DISMISS") {}
+                        .show()
             }
             // if no, does nothing
             builder.setNegativeButton("CANCEL") { _, _ -> }
@@ -194,10 +190,8 @@ class MainActivity : AppCompatActivity() {
                     )
                     routineListAdapter.notifyDataSetChanged()
                     Snackbar.make(routineListView, "Added new workout", Snackbar.LENGTH_LONG)
-                        .setAction(
-                                "Action",
-                                null
-                        ).show()
+                            .setAction("DISMISS") {}
+                            .show()
                 }
                 workoutBuilder.setNegativeButton("CANCEL") { _, _ -> }
                 workoutBuilder.show()
@@ -262,6 +256,7 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
+            // TODO play a workout when play button selected. Need Timer.java completed first
         }
     }
 }
