@@ -75,6 +75,10 @@ class MainActivity : AppCompatActivity() {
         routineList[0].addElement(RoutineElement("yoga 10", 5))
         routineList[0].addElement(RoutineElement("yoga 11", 0))
         routineList[0].addElement(RoutineElement("yoga 12", 5))
+        routineList[0].addElement(RoutineElement("yoga 13", 0))
+        routineList[0].addElement(RoutineElement("yoga 14", 2000000000))
+        routineList[0].addElement(RoutineElement("yoga 15", 0))
+        routineList[0].addElement(RoutineElement("yoga 16", 5))
         routineList[4].addElement(RoutineElement("leg day 1", 10))
 
         // adapter to adapt the routineList into our list on the main screen
