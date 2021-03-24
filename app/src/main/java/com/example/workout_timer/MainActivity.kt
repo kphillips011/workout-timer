@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var elementsListView: ListView
     private lateinit var viewSwitcher: ViewSwitcher
     private lateinit var elementDetailsView: View
+    private lateinit var playButton: Button
     private var elementDetailsUp: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
         val fab: View = findViewById(R.id.fab)
+        //playButton = findViewById(R.id.play_button) // TODO fix, causes app crash
 
         // ref: https://tutorialwing.com/android-viewswitcher-using-kotlin-example/
         viewSwitcher = findViewById<ViewSwitcher>(R.id.viewSwitcher)
