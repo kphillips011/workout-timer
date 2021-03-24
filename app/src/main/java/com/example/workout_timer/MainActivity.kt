@@ -71,7 +71,6 @@ class MainActivity : AppCompatActivity() {
         val routineListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, routineList)
         routineListView.adapter = routineListAdapter
 
-
         routineListView.setOnItemClickListener { _, routineListView, i, _ ->
             val selectedWorkout = routineList[i]
             var elementsList = selectedWorkout.getElements()
@@ -82,19 +81,12 @@ class MainActivity : AppCompatActivity() {
             elementsListView.setOnItemClickListener { _, _, i, _ ->
                 // TODO fill elementDetailsView with element details, image etc
                 val selectedElement = elementsList[i]
-                detailsText.text = selectedElement.getName()
+                detailsText.text = selectedElement.getName() + "\nfor " + selectedElement.getDuration() + " seconds"
 
                 // slide view up
                 if (!elementDetailsUp) {
                     elementDetailsView.visibility = View.VISIBLE
-                    val animate = TranslateAnimation(
-                            0F,  // fromXDelta
-                            0F,  // toXDelta
-                            elementDetailsView.height.toFloat(),  // fromYDelta
-                            0F) // toYDelta
-                    animate.duration = 500
-                    animate.fillAfter = true
-                    elementDetailsView.startAnimation(animate)
+                    slideUpDetails(elementDetailsView)
                     elementDetailsUp = true
                 }
             }
@@ -144,17 +136,6 @@ class MainActivity : AppCompatActivity() {
                     elementBuilder.show()
                 }
             }
-        }
-
-        fun slideDownDetails(view: View) {
-            val animate = TranslateAnimation(
-                    0F,  // fromXDelta
-                    0F,  // toXDelta
-                    0F,  // fromYDelta
-                    view.height.toFloat()) // toYDelta
-            animate.duration = 500
-            animate.fillAfter = true
-            view.startAnimation(animate)
         }
 
         routineListView.onItemLongClickListener = OnItemLongClickListener { _, routineListView, i, _ ->
@@ -213,6 +194,18 @@ class MainActivity : AppCompatActivity() {
                 0F,  // toXDelta
                 0F,  // fromYDelta
                 view.height.toFloat()) // toYDelta
+        animate.duration = 500
+        animate.fillAfter = true
+        view.startAnimation(animate)
+    }
+
+    fun slideUpDetails(view: View) {
+        view.visibility = View.VISIBLE
+        val animate = TranslateAnimation(
+                0F,  // fromXDelta
+                0F,  // toXDelta
+                view.height.toFloat(),  // fromYDelta
+                0F) // toYDelta
         animate.duration = 500
         animate.fillAfter = true
         view.startAnimation(animate)
