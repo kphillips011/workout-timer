@@ -2,6 +2,7 @@ package com.example.workout_timer
 
 import android.os.Bundle
 import android.view.Menu
+import android.widget.TextView
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils

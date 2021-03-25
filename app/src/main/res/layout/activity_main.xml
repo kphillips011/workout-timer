@@ -100,15 +100,19 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
+        android:layout_gravity="bottom|end"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
         android:text="@string/actions"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@color/teal_200"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:icon="@android:drawable/ic_input_add"/>
+        app:icon="@android:drawable/ic_input_add"
+        android:layout_alignParentRight="true" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_custom_fab"
@@ -125,11 +129,14 @@
         android:id="@+id/add_custom_action_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:elevation="20dp"
         android:text="@string/addCustom"
         app:layout_constraintBottom_toBottomOf="@+id/add_custom_fab"
         app:layout_constraintEnd_toStartOf="@+id/add_custom_fab"
-        app:layout_constraintTop_toTopOf="@+id/add_custom_fab" />
+        app:layout_constraintTop_toTopOf="@+id/add_custom_fab"
+        android:layout_marginRight="8dp" />
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_preset_fab"
@@ -147,7 +154,9 @@
         android:id="@+id/add_preset_action_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:elevation="20dp"
         android:text="@string/addPreset"
         app:layout_constraintBottom_toBottomOf="@+id/add_preset_fab"
         app:layout_constraintEnd_toStartOf="@+id/add_preset_fab"
