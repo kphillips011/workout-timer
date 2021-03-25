@@ -102,6 +102,7 @@ class MainActivity : AppCompatActivity() {
 
         routineListView.setOnItemClickListener { _, routineListView, i, _ ->
             playButton.isVisible = true
+            if(allFabsVisible) { closeFab() }
             val selectedWorkout = routineList[i]
             // set toolbar title to be the routine's name
             (this as? AppCompatActivity)?.supportActionBar?.title = selectedWorkout.getName()
@@ -141,13 +142,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             // 'add' button to add a new element
-            fab.setOnClickListener() { view ->
-                if (!allFabsVisible) {
-                    expandFab("Add Preset Element", "Add Custom Element")
-                } else { closeFab() }
-            }
 
-            customFab.setOnClickListener { view ->
+            customFab.setOnClickListener { elementsListView ->
                 if (viewSwitcher.currentView.equals(elementsListView)) {
                     val elementBuilder = AlertDialog.Builder(this)
                     val elementInflater = layoutInflater
@@ -173,7 +169,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            presetFab.setOnClickListener { view ->
+            presetFab.setOnClickListener { elementsListView ->
                 // TODO
             }
         }
@@ -195,14 +191,21 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        // 'add' button to add a new workout
         fab.setOnClickListener { view ->
-            if (!allFabsVisible) {
-                expandFab("Add Preset Workout", "Add Custom Workout")
-            } else { closeFab() }
+            if (viewSwitcher.currentView.equals(routineListView)) {
+                if (!allFabsVisible) {
+                    expandFab("Add Preset Workout", "Add Custom Workout")
+                } else { closeFab() }
+            } else if (viewSwitcher.currentView.equals(elementsListView)) {
+                if (!allFabsVisible) {
+                    expandFab("Add Preset Element", "Add Custom Element")
+                } else { closeFab() }
+            }
         }
 
-        customFab.setOnClickListener { view ->
+        // 'add' button to add a new workout
+
+        customFab.setOnClickListener { routineListView ->
             if (viewSwitcher.currentView.equals(routineListView)) {
                 // add stuff in here to input name of new routine to be added
                 // ref: https://www.journaldev.com/309/android-alert-dialog-using-kotlin
@@ -231,7 +234,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        presetFab.setOnClickListener { view ->
+        presetFab.setOnClickListener { routineListView ->
             // TODO
         }
     }
@@ -283,6 +286,7 @@ class MainActivity : AppCompatActivity() {
     // if android back button is pressed while on the elements list, we want
     // to go back to the main screen where the routine list is displayed
     override fun onBackPressed() {
+        if(allFabsVisible) { closeFab() }
         if (viewSwitcher.currentView.equals(elementsListView)) {
             if (elementDetailsUp) {
                 slideDownDetails(elementDetailsView)
