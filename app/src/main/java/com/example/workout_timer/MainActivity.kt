@@ -1,5 +1,6 @@
 package com.example.workout_timer
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.widget.TextView
@@ -14,6 +15,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import java.io.IOException
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 
 class MainActivity : AppCompatActivity() {
@@ -66,6 +70,15 @@ class MainActivity : AppCompatActivity() {
         routineList = mutableListOf<Routine>()
 
         // add elements to routineList, sample data
+        val jsonFile = getJsonData(applicationContext, "default_workouts.json")
+        val gson = Gson()
+        val defaultWorkoutsType = object : TypeToken<MutableList<Routine>>() {}.type
+        var defaultWorkouts: MutableList<Routine> = gson.fromJson(jsonFile, defaultWorkoutsType)
+        for (workout in defaultWorkouts) {
+        // TODO add each workout
+        }
+
+        /*
         routineList.add(Routine(mutableListOf<RoutineElement>(), "yoga flow"))
         routineList.add(Routine(mutableListOf<RoutineElement>(), "core workout"))
         routineList.add(Routine(mutableListOf<RoutineElement>(), "get swol"))
@@ -99,6 +112,7 @@ class MainActivity : AppCompatActivity() {
         routineList[0].addElement(RoutineElement("yoga 15", 0))
         routineList[0].addElement(RoutineElement("yoga 16", 5))
         routineList[4].addElement(RoutineElement("leg day 1", 10))
+         */
 
         // adapter to adapt the routineList into our list on the main screen
         routineListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, routineList)
@@ -232,6 +246,18 @@ class MainActivity : AppCompatActivity() {
         presetFab.setOnClickListener { view ->
             // TODO
         }
+    }
+
+    // ref: https://bezkoder.com/kotlin-android-read-json-file-assets-gson/
+    private fun getJsonData(context: Context, file: String): String? {
+        val json: String
+        try {
+            json = context.assets.open(file).bufferedReader().use { it.readText() }
+        } catch (exception: IOException) {
+            exception.printStackTrace()
+            return null
+        }
+        return json
     }
 
     private fun expandFab(pt: String, ct: String) {
