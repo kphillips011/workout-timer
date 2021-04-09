@@ -16,8 +16,6 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import java.io.IOException
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
@@ -200,7 +198,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 val workoutBuilder = AlertDialog.Builder(this)
                 val workoutInflater = layoutInflater
                 workoutBuilder.setTitle("Please enter a name for your workout: ")
-                val dialogLayout = workoutInflater.inflate(R.layout.alert_dialog, null)
+                val dialogLayout = workoutInflater.inflate(R.layout.alert_dialog_edittext, null)
                 var editTextName = dialogLayout.findViewById<EditText>(R.id.editTextName)
                 var editTextDuration = dialogLayout.findViewById<EditText>(R.id.editTextDuration)
                 editTextDuration.visibility = View.GONE
@@ -224,7 +222,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 val elementBuilder = AlertDialog.Builder(this)
                 val elementInflater = layoutInflater
                 elementBuilder.setTitle("Please enter a name and duration for your element: ")
-                val dialogLayout = elementInflater.inflate(R.layout.alert_dialog, null)
+                val dialogLayout = elementInflater.inflate(R.layout.alert_dialog_edittext, null)
                 var editTextName = dialogLayout.findViewById<EditText>(R.id.editTextName)
                 var editTextDuration = dialogLayout.findViewById<EditText>(R.id.editTextDuration)
                 elementBuilder.setView(dialogLayout)
@@ -251,7 +249,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 val workoutBuilder = AlertDialog.Builder(this)
                 val workoutInflater = layoutInflater
                 workoutBuilder.setTitle("Please select a workout: ")
-                val dialogLayout = workoutInflater.inflate(R.layout.alert_dialog, null)
+                val dialogLayout = workoutInflater.inflate(R.layout.alert_dialog_spinner, null)
                 var spinner: Spinner = dialogLayout.findViewById(R.id.preset_spinner)
                 // TODO replace below with file representation
 
@@ -265,23 +263,39 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 }
                 spinner.onItemSelectedListener = this
                 workoutBuilder.setView(dialogLayout)
+                workoutBuilder.setPositiveButton("OK") { dialogInterface, i ->
+                    routineList.add(Routine(mutableListOf<RoutineElement>(), spinner.selectedItem as String))
+                    // TODO add elements of preset
+                    routineListAdapter.notifyDataSetChanged()
+                    Snackbar.make(routineListView, "Added new workout", Snackbar.LENGTH_LONG)
+                        .setAction("DISMISS") {}
+                        .show()
+                }
+                workoutBuilder.setNegativeButton("CANCEL") { _, _ -> }
+                workoutBuilder.show()
             }
             else if (viewSwitcher.currentView.equals(elementsListView)) {
                 val elementBuilder = AlertDialog.Builder(this)
                 val elementInflater = layoutInflater
                 elementBuilder.setTitle("Please select a workout element: ")
-                val dialogLayout = elementInflater.inflate(R.layout.alert_dialog, null)
+                val dialogLayout = elementInflater.inflate(R.layout.alert_dialog_spinner, null)
                 var spinner: Spinner = dialogLayout.findViewById(R.id.preset_spinner)
                 elementBuilder.setView(dialogLayout)
+                elementBuilder.setPositiveButton("OK") { dialogInterface, i ->
+                    // TODO add to elements list
+                    elementsListAdapter.notifyDataSetChanged()
+                    Snackbar.make(elementsListView, "Added new element", Snackbar.LENGTH_LONG)
+                        .setAction("DISMISS") {}
+                        .show()
+                }
+                elementBuilder.setNegativeButton("CANCEL") { _, _ -> }
+                elementBuilder.show()
             }
         }
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-        val selection = parent?.getItemAtPosition(pos)
-        if (viewSwitcher.currentView.equals(routineListView)) {
-            routineList.add(Routine(mutableListOf<RoutineElement>(), selection as String))
-        }
+        parent?.getItemAtPosition(pos)
     }
 
     override fun onNothingSelected(parent: AdapterView<*>) {}
