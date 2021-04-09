@@ -20,7 +20,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var routineListView: ListView
     private lateinit var elementsListView: ListView
@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         elementsListView = findViewById<ListView>(R.id.routine_elements)
         routineList = mutableListOf<Routine>()
 
+        /*
         // add elements to routineList, sample data
         val jsonFile = getJsonData(applicationContext, "default_workouts.json")
         val gson = Gson()
@@ -77,6 +78,7 @@ class MainActivity : AppCompatActivity() {
         for (workout in defaultWorkouts) {
         // TODO add each workout
         }
+         */
 
         /*
         routineList.add(Routine(mutableListOf<RoutineElement>(), "yoga flow"))
@@ -198,7 +200,7 @@ class MainActivity : AppCompatActivity() {
                 val workoutBuilder = AlertDialog.Builder(this)
                 val workoutInflater = layoutInflater
                 workoutBuilder.setTitle("Please enter a name for your workout: ")
-                val dialogLayout = workoutInflater.inflate(R.layout.alert_dialog_with_edittext, null)
+                val dialogLayout = workoutInflater.inflate(R.layout.alert_dialog, null)
                 var editTextName = dialogLayout.findViewById<EditText>(R.id.editTextName)
                 var editTextDuration = dialogLayout.findViewById<EditText>(R.id.editTextDuration)
                 editTextDuration.visibility = View.GONE
@@ -218,11 +220,11 @@ class MainActivity : AppCompatActivity() {
                 workoutBuilder.setNegativeButton("CANCEL") { _, _ -> }
                 workoutBuilder.show()
             }
-            if (viewSwitcher.currentView.equals(elementsListView)) {
+            else if (viewSwitcher.currentView.equals(elementsListView)) {
                 val elementBuilder = AlertDialog.Builder(this)
                 val elementInflater = layoutInflater
                 elementBuilder.setTitle("Please enter a name and duration for your element: ")
-                val dialogLayout = elementInflater.inflate(R.layout.alert_dialog_with_edittext, null)
+                val dialogLayout = elementInflater.inflate(R.layout.alert_dialog, null)
                 var editTextName = dialogLayout.findViewById<EditText>(R.id.editTextName)
                 var editTextDuration = dialogLayout.findViewById<EditText>(R.id.editTextDuration)
                 elementBuilder.setView(dialogLayout)
@@ -245,8 +247,44 @@ class MainActivity : AppCompatActivity() {
 
         presetFab.setOnClickListener { view ->
             // TODO
+            if (viewSwitcher.currentView.equals(routineListView)) {
+                val workoutBuilder = AlertDialog.Builder(this)
+                val workoutInflater = layoutInflater
+                workoutBuilder.setTitle("Please select a workout: ")
+                val dialogLayout = workoutInflater.inflate(R.layout.alert_dialog, null)
+                var spinner: Spinner = dialogLayout.findViewById(R.id.preset_spinner)
+                // TODO replace below with file representation
+
+                ArrayAdapter.createFromResource(
+                    this,
+                    R.array.default_workouts,
+                    android.R.layout.simple_spinner_item
+                ).also { adapter ->
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    spinner.adapter = adapter
+                }
+                spinner.onItemSelectedListener = this
+                workoutBuilder.setView(dialogLayout)
+            }
+            else if (viewSwitcher.currentView.equals(elementsListView)) {
+                val elementBuilder = AlertDialog.Builder(this)
+                val elementInflater = layoutInflater
+                elementBuilder.setTitle("Please select a workout element: ")
+                val dialogLayout = elementInflater.inflate(R.layout.alert_dialog, null)
+                var spinner: Spinner = dialogLayout.findViewById(R.id.preset_spinner)
+                elementBuilder.setView(dialogLayout)
+            }
         }
     }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+        val selection = parent?.getItemAtPosition(pos)
+        if (viewSwitcher.currentView.equals(routineListView)) {
+            routineList.add(Routine(mutableListOf<RoutineElement>(), selection as String))
+        }
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>) {}
 
     // ref: https://bezkoder.com/kotlin-android-read-json-file-assets-gson/
     private fun getJsonData(context: Context, file: String): String? {

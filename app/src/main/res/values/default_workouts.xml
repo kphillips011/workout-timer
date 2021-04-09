@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="default_workouts">
+        <item>
+            <array
+                name="yoga_flow">
+                <item><array name="downward-dog"><item>10</item></array></item>
+                <item><array name="lotus-pose"><item>30</item></array></item>
+                <item><array name="plank"><item>60</item></array></item>
+                <item><array name="tree"><item>20</item></array></item>
+                <item><array name="upward-facing-dog"><item>15</item></array></item>
+                <item><array name="warrior-1"><item>5</item></array></item>
+                <item><array name="warrior-2"><item>5</item></array></item>
+                <item><array name="warrior-3"><item>10</item></array></item>
+            </array>
+            <array
+                name="core_crush">
+                <item><array name="bicycle-crunches"><item>60</item></array>
+                </item><item><array name="mountain-climbers"><item>30</item></array>
+                </item><item><array name="push-ups"><item>60</item></array></item>
+            </array>
+        </item>
+    </array>
+</resources>

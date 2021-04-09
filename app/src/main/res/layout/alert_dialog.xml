@@ -16,4 +16,9 @@
         android:layout_height="wrap_content"
         android:hint="Enter the duration in seconds"/>
 
+    <Spinner
+        android:id="@+id/preset_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>
