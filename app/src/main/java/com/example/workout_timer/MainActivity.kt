@@ -249,23 +249,34 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         presetFab.setOnClickListener { view ->
             // TODO
+            val workoutNamesArray: TypedArray = resources.obtainTypedArray(R.array.default_workout_names)
+            var itemNames: MutableList<String?> = mutableListOf<String?>()
+            var item: TypedArray
+
+            for (i in 0 until workoutNamesArray.length()) {
+                val res = workoutNamesArray.getResourceId(i, -1)
+                if (res < 0) { continue }
+                item = resources.obtainTypedArray(res)
+                itemNames.add(item.getString(0))
+            }
+
+            val elementNamesArray: TypedArray = resources.obtainTypedArray(R.array.default_element_names)
+            var elementNames: MutableList<String?> = mutableListOf<String?>()
+            var itemElements: MutableList<RoutineElement> = mutableListOf<RoutineElement>()
+            var arrayElement: TypedArray
+
+            for (i in 0 until elementNamesArray.length()) {
+                val elementRes = elementNamesArray.getResourceId(i, -1)
+                if (elementRes < 0) { continue }
+                arrayElement = resources.obtainTypedArray(elementRes)
+                elementNames.add(arrayElement.getString(0))
+            }
+
             if (viewSwitcher.currentView.equals(routineListView)) {
                 val workoutBuilder = AlertDialog.Builder(this)
                 val workoutInflater = layoutInflater
                 workoutBuilder.setTitle("Please select a workout: ")
                 val dialogLayout = workoutInflater.inflate(R.layout.alert_dialog_spinner, null)
-
-                val workoutNamesArray: TypedArray = resources.obtainTypedArray(R.array.default_workout_names)
-                var itemNames: MutableList<String?> = mutableListOf<String?>()
-                var itemElements: MutableList<RoutineElement> = mutableListOf<RoutineElement>()
-                var item: TypedArray
-
-                for (i in 0 until workoutNamesArray.length()) {
-                    val res = workoutNamesArray.getResourceId(i, -1)
-                    if (res < 0) { continue }
-                    item = resources.obtainTypedArray(res)
-                    itemNames.add(item.getString(0))
-                }
 
                 var spinner: Spinner = dialogLayout.findViewById(R.id.preset_spinner)
                 val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, itemNames
@@ -301,10 +312,21 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 val elementInflater = layoutInflater
                 elementBuilder.setTitle("Please select a workout element: ")
                 val dialogLayout = elementInflater.inflate(R.layout.alert_dialog_spinner, null)
+
                 var spinner: Spinner = dialogLayout.findViewById(R.id.preset_spinner)
+                val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, elementNames
+                ).also { adapter ->
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    spinner.adapter = adapter
+                }
+
+                spinner.onItemSelectedListener = this
                 elementBuilder.setView(dialogLayout)
                 elementBuilder.setPositiveButton("OK") { dialogInterface, i ->
-                    // TODO add to elements list
+                    // TODO add to elements list with specific duration
+                    val elementName = spinner.selectedItem
+                    val elementDuration = 0
+                    elementsList.add(RoutineElement(elementName as String, elementDuration))
                     elementsListAdapter.notifyDataSetChanged()
                     Snackbar.make(elementsListView, "Added new element", Snackbar.LENGTH_LONG)
                         .setAction("DISMISS") {}

@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <array name="default_element_names">
+        <item>@array/downward_dog</item>
+        <item>@array/lotus_pose</item>
+        <item>@array/plank</item>
+        <item>@array/tree</item>
+        <item>@array/upward_facing_dog</item>
+        <item>@array/warrior_1</item>
+        <item>@array/warrior_2</item>
+        <item>@array/warrior_3</item>
+    </array>
     <array name="downward_dog">
         <item>Downward Dog</item>
         <item>10</item>
