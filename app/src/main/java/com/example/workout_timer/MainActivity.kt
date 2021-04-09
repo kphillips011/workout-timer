@@ -1,9 +1,9 @@
 package com.example.workout_timer
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.os.Bundle
 import android.view.Menu
-import android.widget.TextView
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -125,7 +125,11 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             // set toolbar title to be the routine's name
             (this as? AppCompatActivity)?.supportActionBar?.title = selectedWorkout.getName()
             elementsList = selectedWorkout.getElements()
-            elementsListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, elementsList)
+            elementsListAdapter = ArrayAdapter(
+                this,
+                android.R.layout.simple_list_item_1,
+                elementsList
+            )
             elementsListView.adapter = elementsListAdapter
             viewSwitcher.showNext()
 
@@ -205,10 +209,10 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 workoutBuilder.setView(dialogLayout)
                 workoutBuilder.setPositiveButton("OK") { dialogInterface, i ->
                     routineList.add(
-                            Routine(
-                                    mutableListOf<RoutineElement>(),
-                                    editTextName.text.toString()
-                            )
+                        Routine(
+                            mutableListOf<RoutineElement>(),
+                            editTextName.text.toString()
+                        )
                     )
                     routineListAdapter.notifyDataSetChanged()
                     Snackbar.make(routineListView, "Added new workout", Snackbar.LENGTH_LONG)
@@ -228,10 +232,10 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 elementBuilder.setView(dialogLayout)
                 elementBuilder.setPositiveButton("OK") { dialogInterface, i ->
                     elementsList.add(
-                            RoutineElement(
-                                    editTextName.text.toString(),
-                                    editTextDuration.text.toString().toInt()
-                            )
+                        RoutineElement(
+                            editTextName.text.toString(),
+                            editTextDuration.text.toString().toInt()
+                        )
                     )
                     elementsListAdapter.notifyDataSetChanged()
                     Snackbar.make(elementsListView, "Added new element", Snackbar.LENGTH_LONG)
@@ -250,22 +254,40 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 val workoutInflater = layoutInflater
                 workoutBuilder.setTitle("Please select a workout: ")
                 val dialogLayout = workoutInflater.inflate(R.layout.alert_dialog_spinner, null)
-                var spinner: Spinner = dialogLayout.findViewById(R.id.preset_spinner)
-                // TODO replace below with file representation
 
-                ArrayAdapter.createFromResource(
-                    this,
-                    R.array.default_workouts,
-                    android.R.layout.simple_spinner_item
-                ).also { adapter ->
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinner.adapter = adapter
+                val workoutNamesArray: TypedArray = resources.obtainTypedArray(R.array.default_workout_names)
+                var itemNames: MutableList<String?> = mutableListOf<String?>()
+                var itemElements: MutableList<RoutineElement> = mutableListOf<RoutineElement>()
+                var item: TypedArray
+
+                for (i in 0 until workoutNamesArray.length()) {
+                    val res = workoutNamesArray.getResourceId(i, -1)
+                    if (res < 0) { continue }
+                    item = resources.obtainTypedArray(res)
+                    itemNames.add(item.getString(0))
                 }
+
+                var spinner: Spinner = dialogLayout.findViewById(R.id.preset_spinner)
+                val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, itemNames
+                    ).also { adapter ->
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        spinner.adapter = adapter
+                    }
+
                 spinner.onItemSelectedListener = this
                 workoutBuilder.setView(dialogLayout)
+                // TODO add elements of preset
                 workoutBuilder.setPositiveButton("OK") { dialogInterface, i ->
-                    routineList.add(Routine(mutableListOf<RoutineElement>(), spinner.selectedItem as String))
-                    // TODO add elements of preset
+                    val workoutName = spinner.selectedItem
+                    /*
+                    var elementItem: TypedArray
+                    for (e in 1 until workoutName.length()) {
+                        val elementRes = item.getResourceId(e, -1)
+                        if (elementRes < 0) { continue }
+                        elementItem = resources.obtainTypedArray(elementRes)
+                    }
+                     */
+                    routineList.add(Routine(itemElements, workoutName as String))
                     routineListAdapter.notifyDataSetChanged()
                     Snackbar.make(routineListView, "Added new workout", Snackbar.LENGTH_LONG)
                         .setAction("DISMISS") {}
@@ -335,10 +357,11 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     // slide the view from its current position to below itself
     private fun slideDownDetails(view: View) {
         val animate = TranslateAnimation(
-                0F,  // fromXDelta
-                0F,  // toXDelta
-                0F,  // fromYDelta
-                view.height.toFloat()) // toYDelta
+            0F,  // fromXDelta
+            0F,  // toXDelta
+            0F,  // fromYDelta
+            view.height.toFloat()
+        ) // toYDelta
         animate.duration = 500
         animate.fillAfter = true
         view.startAnimation(animate)
@@ -347,10 +370,11 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     fun slideUpDetails(view: View) {
         view.visibility = View.VISIBLE
         val animate = TranslateAnimation(
-                0F,  // fromXDelta
-                0F,  // toXDelta
-                view.height.toFloat(),  // fromYDelta
-                0F) // toYDelta
+            0F,  // fromXDelta
+            0F,  // toXDelta
+            view.height.toFloat(),  // fromYDelta
+            0F
+        ) // toYDelta
         animate.duration = 500
         animate.fillAfter = true
         view.startAnimation(animate)

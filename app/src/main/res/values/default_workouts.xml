@@ -1,19 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="default_workouts">
+    <array name="default_workout_names">
+        <item>@array/yoga_flow</item>
+        <item>@array/rise_and_shine</item>
+        <item>@array/balance_and_focus</item>
+        <item>@array/abs_just_sayin</item>
+        <item>@array/core_crush</item>
+        <item>@array/get_swol</item>
+        <item>@array/the_gun_show</item>
+        <item>@array/leg_day</item>
+        <item>@array/thigh_trimmer</item>
+        <item>@array/easy_peazy</item>
+        <item>@array/lemon_squeezy</item>
+        <item>@array/agility_blitz</item>
+        <item>@array/tabata_toner</item>
+        <item>@array/recovery_day</item>
+    </array>
+    <array name="yoga_flow">
         <item>Yoga Flow</item>
+        <item>@array/downward_dog</item>
+        <item>@array/lotus_pose</item>
+        <item>@array/plank</item>
+        <item>@array/tree</item>
+        <item>@array/upward_facing_dog</item>
+        <item>@array/warrior_1</item>
+        <item>@array/warrior_2</item>
+        <item>@array/warrior_3</item>
+    </array>
+    <array name = "rise_and_shine">
         <item>Rise &amp; Shine</item>
+    </array>
+    <array name = "balance_and_focus">
         <item>Balance &amp; Focus</item>
+    </array>
+    <array name = "abs_just_sayin">
         <item>Abs. Just Sayin</item>
+    </array>
+    <array name = "core_crush">
         <item>Core Crush</item>
+    </array>
+    <array name = "get_swol">
         <item>Get Swol</item>
+    </array>
+    <array name = "the_gun_show">
         <item>The Gun Show</item>
+    </array>
+    <array name = "leg_day">
         <item>Leg Day</item>
+    </array>
+    <array name = "thigh_trimmer">
         <item>Thigh Trimmer</item>
+    </array>
+    <array name = "easy_peazy">
         <item>Easy Peazy</item>
+    </array>
+    <array name = "lemon_squeezy">
         <item>Lemon Squeezy</item>
+    </array>
+    <array name = "agility_blitz">
         <item>Agility Blitz</item>
+    </array>
+    <array name = "tabata_toner">
         <item>Tabata Toner</item>
+    </array>
+    <array name = "recovery_day">
         <item>Recovery Day</item>
     </array>
+
 </resources>

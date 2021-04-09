@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="downward_dog">
+        <item>Downward Dog</item>
+        <item></item>
+    </array>
+    <array name="lotus_pose">
+        <item>Lotus Pose</item>
+    </array>
+    <array name="plank">
+        <item>Plank</item>
+    </array>
+    <array name="tree">
+        <item>Tree</item>
+    </array>
+    <array name="upward_facing_dog">
+        <item>Upward Facing Dog</item>
+    </array>
+    <array name="warrior_1">
+        <item>Warrior 1</item>
+    </array>
+    <array name="warrior_2">
+        <item>Warrior 2</item>
+    </array>
+    <array name="warrior_3">
+        <item>Warrior 3</item>
+    </array>
+</resources>
