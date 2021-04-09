@@ -65,7 +65,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/element_details"
         android:background="?attr/colorSecondaryVariant"
         android:orientation="vertical"
@@ -80,19 +80,20 @@
             android:textColor="@color/white"
             android:gravity="center_horizontal"
             android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
             android:textSize="32sp"
             android:layout_width="match_parent"/>
 
         <ImageView
             android:id="@+id/details_image_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="325dp"
+            android:layout_height="250dp"
+            android:layout_marginTop="100dp"
+            android:paddingTop="20dp"
             android:layout_centerHorizontal="true"
             android:layout_gravity="bottom"
-            android:scaleType="fitXY"
-            android:scaleX="1.5"
-            android:scaleY="1.5"/>
-    </LinearLayout>
+            android:scaleType="fitXY" />
+    </RelativeLayout>
 
     <include
         android:id="@+id/include4"

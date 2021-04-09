@@ -13,26 +13,41 @@
     <array name="downward_dog">
         <item>Downward Dog</item>
         <item>10</item>
+        <item>@drawable/downward_dog</item>
     </array>
     <array name="lotus_pose">
         <item>Lotus Pose</item>
+        <item>60</item>
+        <item>@drawable/lotus_pose</item>
     </array>
     <array name="plank">
         <item>Plank</item>
+        <item>45</item>
+        <item>@drawable/plank</item>
     </array>
     <array name="tree">
         <item>Tree</item>
+        <item>60</item>
+        <item>@drawable/tree</item>
     </array>
     <array name="upward_facing_dog">
         <item>Upward Facing Dog</item>
+        <item>30</item>
+        <item>@drawable/upward_facing_dog</item>
     </array>
     <array name="warrior_1">
         <item>Warrior 1</item>
+        <item>5</item>
+        <item>@drawable/warrior_1</item>
     </array>
     <array name="warrior_2">
         <item>Warrior 2</item>
+        <item>5</item>
+        <item>@drawable/warrior_2</item>
     </array>
     <array name="warrior_3">
         <item>Warrior 3</item>
+        <item>10</item>
+        <item>@drawable/warrior_3</item>
     </array>
 </resources>

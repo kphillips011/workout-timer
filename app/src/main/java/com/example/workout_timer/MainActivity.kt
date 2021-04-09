@@ -140,10 +140,14 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 // TODO fill elementDetailsView with element details, image etc
                 val selectedElement = elementsList[i]
                 detailsText.text = selectedElement.getName() + "\nfor " + selectedElement.getDuration() + " seconds"
-                detailsImage.setImageResource(R.drawable.crescent_moon_lunge)
+                detailsImage.setImageResource(R.drawable.downward_dog)
 
                 // slide view up
                 if (!elementDetailsUp) {
+                    if (allFabsVisible) {
+                        closeFab()
+                    }
+                    fab.visibility = View.GONE
                     elementDetailsView.visibility = View.VISIBLE
                     detailsImage.visibility = View.VISIBLE
                     slideUpDetails(elementDetailsView)
@@ -416,6 +420,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 slideDownDetails(elementDetailsView)
                 elementDetailsView.visibility = View.INVISIBLE
                 elementDetailsUp = false
+                fab.visibility = View.VISIBLE
             } else {
                 viewSwitcher.showNext()
                 // set title on toolbar back to workout timer
