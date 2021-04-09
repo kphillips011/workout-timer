@@ -82,6 +82,16 @@
             android:layout_height="match_parent"
             android:textSize="32sp"
             android:layout_width="match_parent"/>
+
+        <ImageView
+            android:id="@+id/details_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="bottom"
+            android:scaleType="fitXY"
+            android:scaleX="1.5"
+            android:scaleY="1.5"/>
     </LinearLayout>
 
     <include

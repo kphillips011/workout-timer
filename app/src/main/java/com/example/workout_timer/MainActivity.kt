@@ -2,6 +2,7 @@ package com.example.workout_timer
 
 import android.content.Context
 import android.content.res.TypedArray
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private lateinit var routineListView: ListView
     private lateinit var elementsListView: ListView
     private lateinit var elementDetailsView: View
+    private lateinit var detailsImage: ImageView
     private lateinit var routineList: MutableList<Routine>
     private lateinit var elementsList: MutableList<RoutineElement>
     private lateinit var routineListAdapter: ArrayAdapter<Routine>
@@ -59,6 +61,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         elementDetailsView = findViewById<LinearLayout>(R.id.element_details)
         elementDetailsView.visibility = View.INVISIBLE
         val detailsText: TextView = findViewById(R.id.details_text_view);
+        detailsImage = findViewById(R.id.details_image_view)
 
         // ref: https://www.raywenderlich.com/155-android-listview-tutorial-with-kotlin
         //      https://www.raywenderlich.com/1364094-android-fragments-tutorial-an-introduction-with-kotlin
@@ -137,10 +140,12 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 // TODO fill elementDetailsView with element details, image etc
                 val selectedElement = elementsList[i]
                 detailsText.text = selectedElement.getName() + "\nfor " + selectedElement.getDuration() + " seconds"
+                detailsImage.setImageResource(R.drawable.crescent_moon_lunge)
 
                 // slide view up
                 if (!elementDetailsUp) {
                     elementDetailsView.visibility = View.VISIBLE
+                    detailsImage.visibility = View.VISIBLE
                     slideUpDetails(elementDetailsView)
                     elementDetailsUp = true
                 }
