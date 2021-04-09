@@ -2,7 +2,7 @@
 <resources>
     <array name="downward_dog">
         <item>Downward Dog</item>
-        <item></item>
+        <item>10</item>
     </array>
     <array name="lotus_pose">
         <item>Lotus Pose</item>
