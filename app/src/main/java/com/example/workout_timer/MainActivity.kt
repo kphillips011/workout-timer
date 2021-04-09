@@ -70,52 +70,22 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         elementsListView = findViewById<ListView>(R.id.routine_elements)
         routineList = mutableListOf<Routine>()
 
-        /*
+
         // add elements to routineList, sample data
-        val jsonFile = getJsonData(applicationContext, "default_workouts.json")
-        val gson = Gson()
-        val defaultWorkoutsType = object : TypeToken<MutableList<Routine>>() {}.type
-        var defaultWorkouts: MutableList<Routine> = gson.fromJson(jsonFile, defaultWorkoutsType)
-        for (workout in defaultWorkouts) {
-        // TODO add each workout
+        val defaultWorkoutsArray: TypedArray = resources.obtainTypedArray(R.array.default_workout_names)
+        var defaultWorkoutNames: MutableList<String?> = mutableListOf<String?>()
+        var defaultWorkout: TypedArray
+
+        for (i in 0 until defaultWorkoutsArray.length()) {
+            val res = defaultWorkoutsArray.getResourceId(i, -1)
+            if (res < 0) { continue }
+            defaultWorkout = resources.obtainTypedArray(res)
+            defaultWorkoutNames.add(defaultWorkout.getString(0))
         }
-         */
 
-        /*
-        routineList.add(Routine(mutableListOf<RoutineElement>(), "yoga flow"))
-        routineList.add(Routine(mutableListOf<RoutineElement>(), "core workout"))
-        routineList.add(Routine(mutableListOf<RoutineElement>(), "get swol"))
-        routineList.add(Routine(mutableListOf<RoutineElement>(), "intense butt workout"))
-        routineList.add(Routine(mutableListOf<RoutineElement>(), "leg day"))
-        routineList.add(Routine(mutableListOf<RoutineElement>(), "weights"))
-        routineList.add(Routine(mutableListOf<RoutineElement>(), "mondays"))
-        routineList.add(Routine(mutableListOf<RoutineElement>(), "easy peasy"))
-        routineList.add(Routine(mutableListOf<RoutineElement>(), "lemon squeezy"))
-        routineList.add(Routine(mutableListOf<RoutineElement>(), "need more workouts"))
-        routineList.add(Routine(mutableListOf<RoutineElement>(), "abs. just sayin"))
-        routineList.add(Routine(mutableListOf<RoutineElement>(), "swimming in the pool"))
-        routineList.add(Routine(mutableListOf<RoutineElement>(), "walking up the stairs"))
-        routineList.add(Routine(mutableListOf<RoutineElement>(), "core 2"))
-        routineList.add(Routine(mutableListOf<RoutineElement>(), "impress the ladies and lads"))
-
-        routineList[0].addElement(RoutineElement("yoga 1", 0))
-        routineList[0].addElement(RoutineElement("yoga 2", 5))
-        routineList[0].addElement(RoutineElement("yoga 3", 0))
-        routineList[0].addElement(RoutineElement("yoga 4", 500))
-        routineList[0].addElement(RoutineElement("yoga 5", 0))
-        routineList[0].addElement(RoutineElement("yoga 6", 5))
-        routineList[0].addElement(RoutineElement("yoga 7", 0))
-        routineList[0].addElement(RoutineElement("yoga 8", 5))
-        routineList[0].addElement(RoutineElement("yoga 9", 3))
-        routineList[0].addElement(RoutineElement("yoga 10", 5))
-        routineList[0].addElement(RoutineElement("yoga 11", 0))
-        routineList[0].addElement(RoutineElement("yoga 12", 5))
-        routineList[0].addElement(RoutineElement("yoga 13", 0))
-        routineList[0].addElement(RoutineElement("yoga 14", 2000000000))
-        routineList[0].addElement(RoutineElement("yoga 15", 0))
-        routineList[0].addElement(RoutineElement("yoga 16", 5))
-        routineList[4].addElement(RoutineElement("leg day 1", 10))
-         */
+        for (workout in defaultWorkoutNames) {
+            routineList.add(Routine(mutableListOf(RoutineElement("element", 10)), workout as String))
+        }
 
         // adapter to adapt the routineList into our list on the main screen
         routineListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, routineList)
