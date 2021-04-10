@@ -1,9 +1,15 @@
 package com.example.workout_timer
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.TypedArray
-import android.graphics.drawable.Drawable
+import android.database.Cursor
+import android.graphics.Bitmap
+import android.net.Uri
+import android.opengl.Visibility
 import android.os.Bundle
+import android.provider.MediaStore
+import android.provider.MediaStore.*
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -24,6 +30,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private lateinit var routineListView: ListView
     private lateinit var elementsListView: ListView
     private lateinit var elementDetailsView: View
+    private lateinit var detailsText: TextView
     private lateinit var detailsImage: ImageView
     private lateinit var routineList: MutableList<Routine>
     private lateinit var elementsList: MutableList<RoutineElement>
@@ -38,6 +45,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private lateinit var playButton: MenuItem
     private var elementDetailsUp: Boolean = false
     private var allFabsVisible: Boolean = false
+    private val pickImage = 0
+    private var imageUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +69,10 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         // ref: https://stackoverflow.com/questions/19765938/show-and-hide-a-view-with-a-slide-up-down-animation
         elementDetailsView = findViewById<LinearLayout>(R.id.element_details)
         elementDetailsView.visibility = View.INVISIBLE
-        val detailsText: TextView = findViewById(R.id.details_text_view);
+        detailsText = findViewById(R.id.details_text_view);
         detailsImage = findViewById(R.id.details_image_view)
+        detailsText.visibility = View.GONE
+        detailsImage.visibility = View.GONE
 
         // ref: https://www.raywenderlich.com/155-android-listview-tutorial-with-kotlin
         //      https://www.raywenderlich.com/1364094-android-fragments-tutorial-an-introduction-with-kotlin
@@ -84,7 +95,12 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
 
         for (workout in defaultWorkoutNames) {
-            routineList.add(Routine(mutableListOf(RoutineElement("element", 10)), workout as String))
+            routineList.add(
+                Routine(
+                    mutableListOf(RoutineElement("element", 10)),
+                    workout as String
+                )
+            )
         }
 
         // adapter to adapt the routineList into our list on the main screen
@@ -118,8 +134,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                         closeFab()
                     }
                     fab.visibility = View.GONE
-                    elementDetailsView.visibility = View.VISIBLE
+                    detailsText.visibility = View.VISIBLE
                     detailsImage.visibility = View.VISIBLE
+                    elementDetailsView.visibility = View.VISIBLE
                     slideUpDetails(elementDetailsView)
                     elementDetailsUp = true
                 }
@@ -258,8 +275,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 val dialogLayout = workoutInflater.inflate(R.layout.alert_dialog_spinner, null)
 
                 var spinner: Spinner = dialogLayout.findViewById(R.id.preset_spinner)
-                val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, itemNames
-                    ).also { adapter ->
+                val spinnerAdapter = ArrayAdapter(
+                    this, android.R.layout.simple_spinner_item, itemNames
+                ).also { adapter ->
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                         spinner.adapter = adapter
                     }
@@ -293,7 +311,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 val dialogLayout = elementInflater.inflate(R.layout.alert_dialog_spinner, null)
 
                 var spinner: Spinner = dialogLayout.findViewById(R.id.preset_spinner)
-                val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, elementNames
+                val spinnerAdapter = ArrayAdapter(
+                    this, android.R.layout.simple_spinner_item, elementNames
                 ).also { adapter ->
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     spinner.adapter = adapter
@@ -322,18 +341,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     }
 
     override fun onNothingSelected(parent: AdapterView<*>) {}
-
-    // ref: https://bezkoder.com/kotlin-android-read-json-file-assets-gson/
-    private fun getJsonData(context: Context, file: String): String? {
-        val json: String
-        try {
-            json = context.assets.open(file).bufferedReader().use { it.readText() }
-        } catch (exception: IOException) {
-            exception.printStackTrace()
-            return null
-        }
-        return json
-    }
 
     private fun expandFab(pt: String, ct: String) {
         presetActionText.text = pt
@@ -366,9 +373,11 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         animate.duration = 500
         animate.fillAfter = true
         view.startAnimation(animate)
+        elementDetailsView.visibility = View.INVISIBLE
+        detailsImage.isClickable = false
     }
 
-    fun slideUpDetails(view: View) {
+    private fun slideUpDetails(view: View) {
         view.visibility = View.VISIBLE
         val animate = TranslateAnimation(
             0F,  // fromXDelta
@@ -379,6 +388,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         animate.duration = 500
         animate.fillAfter = true
         view.startAnimation(animate)
+        detailsImage.isClickable = true
     }
 
     // if android back button is pressed while on the elements list, we want
@@ -388,7 +398,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         if (viewSwitcher.currentView.equals(elementsListView)) {
             if (elementDetailsUp) {
                 slideDownDetails(elementDetailsView)
-                elementDetailsView.visibility = View.INVISIBLE
                 elementDetailsUp = false
                 fab.visibility = View.VISIBLE
             } else {
@@ -399,6 +408,21 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             }
         }
         else { this.finish() }
+    }
+
+    // ref: https://stackoverflow.com/questions/14433096/allow-the-user-to-insert-an-image-in-android-app
+    //      https://www.tutorialspoint.com/how-to-pick-an-image-from-an-image-gallery-on-android-using-kotlin
+    fun selectImage(view: View) {
+        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+        startActivityForResult(gallery, pickImage)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == pickImage) {
+            imageUri = data?.data
+            detailsImage.setImageURI(imageUri)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

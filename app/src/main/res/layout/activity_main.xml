@@ -92,7 +92,8 @@
             android:paddingTop="20dp"
             android:layout_centerHorizontal="true"
             android:layout_gravity="bottom"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"
+            android:onClick="selectImage" />
     </RelativeLayout>
 
     <include
