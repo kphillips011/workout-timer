@@ -19,52 +19,116 @@
     <array name="yoga_flow">
         <item>Yoga Flow</item>
         <item>@array/downward_dog</item>
-        <item>@array/lotus_pose</item>
-        <item>@array/plank</item>
-        <item>@array/tree</item>
         <item>@array/upward_facing_dog</item>
+        <item>@array/tree</item>
         <item>@array/warrior_1</item>
         <item>@array/warrior_2</item>
         <item>@array/warrior_3</item>
+        <item>@array/lotus_pose</item>
     </array>
     <array name = "rise_and_shine">
         <item>Rise &amp; Shine</item>
+        <item>@array/tree</item>
+        <item>@array/upward_facing_dog</item>
+        <item>@array/plank</item>
+        <item>@array/upward_facing_dog</item>
+        <item>@array/lotus_pose</item>
     </array>
     <array name = "balance_and_focus">
         <item>Balance &amp; Focus</item>
+        <item>@array/back_bend</item>
+        <item>@array/forward_bend</item>
+        <item>@array/plank</item>
+        <item>@array/upward_facing_dog</item>
+        <item>@array/childs_pose</item>
     </array>
     <array name = "abs_just_sayin">
         <item>Abs. Just Sayin</item>
+        <item>@array/plank</item>
+        <item>@array/side_step_planks</item>
+        <item>@array/sit_ups</item>
+        <item>@array/russian_twists</item>
+        <item>@array/bicycle_crunches</item>
     </array>
     <array name = "core_crush">
         <item>Core Crush</item>
+        <item>@array/mountain_climbers</item>
+        <item>@array/leg_hold</item>
+        <item>@array/leg_lift</item>
+        <item>side_leg_lift</item>
+        <item>@array/plank</item>
     </array>
     <array name = "get_swol">
         <item>Get Swol</item>
+        <item>@array/tricep_exts</item>
+        <item>@array/tricep_kickbacks</item>
+        <item>@array/pushup</item>
+        <item>@array/arm_circles</item>
+        <item>@array/punches</item>
     </array>
     <array name = "the_gun_show">
         <item>The Gun Show</item>
+        <item>@array/arm_circles</item>
+        <item>@array/tricep_dips</item>
+        <item>@array/shoulder_press</item>
+        <item>@array/shoulder_taps</item>
+        <item>@array/weighted_punches</item>
     </array>
     <array name = "leg_day">
         <item>Leg Day</item>
+        <item>@array/leg_lift</item>
+        <item>@array/tricep_exts</item>
+        <item>@array/side_step_planks</item>
+        <item>@array/lunge</item>
+        <item>@array/mountain_climbers</item>
     </array>
     <array name = "thigh_trimmer">
         <item>Thigh Trimmer</item>
+        <item>@array/side_leg_lift</item>
+        <item>@array/flutter_kicks</item>
+        <item>@array/squats</item>
+        <item>@array/wall_sits</item>
+        <item>@array/side_lunge</item>
     </array>
     <array name = "easy_peazy">
         <item>Easy Peazy</item>
+        <item>@array/calf_raises</item>
+        <item>@array/squats</item>
+        <item>@array/russian_twists</item>
+        <item>@array/sit_ups</item>
+        <item>@array/lunge</item>
+        <item>@array/arm_circles</item>
     </array>
     <array name = "lemon_squeezy">
         <item>Lemon Squeezy</item>
+        <item>@array/tricep_exts</item>
+        <item>@array/wall_sits</item>
+        <item>@array/bicycle_crunches</item>
+        <item>@array/leg_hold</item>
+        <item>@array/childs_pose</item>
     </array>
     <array name = "agility_blitz">
         <item>Agility Blitz</item>
+        <item>@array/tricep_kickbacks</item>
+        <item>@array/high_knees</item>
+        <item>@array/tricep_dips</item>
+        <item>@array/mountain_climbers</item>
     </array>
     <array name = "tabata_toner">
         <item>Tabata Toner</item>
+        <item>@array/pushup</item>
+        <item>@array/squats</item>
+        <item>@array/plank</item>
+        <item>@array/jumping_jacks</item>
+        <item>@array/reverse_lunges</item>
     </array>
     <array name = "recovery_day">
         <item>Recovery Day</item>
+        <item>@array/leg_hold</item>
+        <item>@array/high_knees</item>
+        <item>@array/pushup</item>
+        <item>@array/side_leg_lift</item>
+        <item>@array/shoulder_taps</item>
     </array>
 
 </resources>

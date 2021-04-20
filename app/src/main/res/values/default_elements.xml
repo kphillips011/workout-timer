@@ -9,6 +9,37 @@
         <item>@array/warrior_1</item>
         <item>@array/warrior_2</item>
         <item>@array/warrior_3</item>
+        <item>@array/side_leg_lift</item>
+        <item>@array/side_step_planks</item>
+        <item>@array/russian_twists</item>
+        <item>@array/leg_lift</item>
+        <item>@array/crescent_moon_lunge</item>
+        <item>@array/bicycle_crunches</item>
+        <item>@array/lunge</item>
+        <item>@array/mountain_climbers</item>
+        <item>@array/pushup</item>
+        <item>@array/sit_ups</item>
+        <item>@array/squats</item>
+        <item>@array/walkouts</item>
+        <item>@array/high_knees</item>
+        <item>@array/childs_pose</item>
+        <item>@array/back_bend</item>
+        <item>@array/forward_bend</item>
+        <item>@array/leg_hold</item>
+        <item>@array/arm_circles</item>
+        <item>@array/shoulder_press</item>
+        <item>@array/shoulder_taps</item>
+        <item>@array/tricep_dips</item>
+        <item>@array/tricep_exts</item>
+        <item>@array/tricep_kickbacks</item>
+        <item>@array/weighted_punches</item>
+        <item>@array/punches</item>
+        <item>@array/flutter_kicks</item>
+        <item>@array/side_lunge</item>
+        <item>@array/calf_raises</item>
+        <item>@array/wall_sits</item>
+        <item>@array/reverse_lunges</item>
+        <item>@array/jumping_jacks</item>
     </array>
     <array name="downward_dog">
         <item>Downward Dog</item>
@@ -47,7 +78,163 @@
     </array>
     <array name="warrior_3">
         <item>Warrior 3</item>
-        <item>10</item>
+        <item>5</item>
         <item>@drawable/warrior_3</item>
     </array>
+    <array name="side_leg_lift">
+        <item>Side Leg Lift</item>
+        <item>10</item>
+        <item>@drawable/side_leg_lift</item>
+    </array>
+    <array name="side_step_planks">
+        <item>Side Step Planks</item>
+        <item>20</item>
+        <item>@drawable/side_step_planks</item>
+    </array>
+    <array name="russian_twists">
+        <item>Russian Twists</item>
+        <item>15</item>
+        <item>@drawable/russian_twists</item>
+    </array>
+    <array name="leg_lift">
+        <item>Leg Lifts</item>
+        <item>15</item>
+        <item>@drawable/leg_lift</item>
+    </array>
+    <array name="crescent_moon_lunge">
+        <item>Crescent Moon Lunges</item>
+        <item>15</item>
+        <item>@drawable/crescent_moon_lunge</item>
+    </array>
+    <array name="bicycle_crunches">
+        <item>Bicycle Crunches</item>
+        <item>15</item>
+        <item>@drawable/bicycle_crunches</item>
+    </array>
+    <array name="lunge">
+        <item>Lunges</item>
+        <item>15</item>
+        <item>@drawable/lunge</item>
+    </array>
+    <array name="mountain_climbers">
+        <item>Mountain Climbers</item>
+        <item>15</item>
+        <item>@drawable/mountain_climbers</item>
+    </array>
+    <array name="pushup">
+        <item>Pushups</item>
+        <item>15</item>
+        <item>@drawable/pushup</item>
+    </array>
+    <array name="sit_ups">
+        <item>Sit Ups</item>
+        <item>15</item>
+        <item>@drawable/sit_ups</item>
+    </array>
+    <array name="squats">
+        <item>Squats</item>
+        <item>15</item>
+        <item>@drawable/squats</item>
+    </array>
+    <array name="walkouts">
+        <item>Walkouts</item>
+        <item>15</item>
+        <item>@drawable/walkouts</item>
+    </array>
+    <array name="high_knees">
+        <item>High Knees</item>
+        <item>15</item>
+        <item>@drawable/high_knees</item>
+    </array>
+    <array name="childs_pose">
+        <item>Childs Pose</item>
+        <item>15</item>
+        <item>@drawable/childs_pose</item>
+    </array>
+    <array name="back_bend">
+        <item>Back Bend</item>
+        <item>15</item>
+        <item>@drawable/back_bend</item>
+    </array>
+    <array name="forward_bend">
+        <item>Forward Fold</item>
+        <item>15</item>
+        <item>@drawable/forward_bend</item>
+    </array>
+    <array name="leg_hold">
+    <item>Leg Hold</item>
+    <item>15</item>
+    <item>@drawable/leg_hold</item>
+</array>
+    <array name="arm_circles">
+        <item>Arm Circles</item>
+        <item>15</item>
+        <item>@drawable/arm_circles</item>
+    </array>
+    <array name="shoulder_press">
+        <item>Shoulder Press</item>
+        <item>15</item>
+        <item>@drawable/shoulder_press</item>
+    </array>
+    <array name="shoulder_taps">
+        <item>Shoulder Taps</item>
+        <item>15</item>
+        <item>@drawable/shoulder_taps</item>
+    </array>
+    <array name="tricep_dips">
+        <item>Tricep Dips</item>
+        <item>15</item>
+        <item>@drawable/tricep_dips</item>
+    </array>
+    <array name="tricep_exts">
+        <item>Tricep Extensions</item>
+        <item>15</item>
+        <item>@drawable/tricep_ext</item>
+    </array>
+    <array name="tricep_kickbacks">
+        <item>Tricep Kickbacks</item>
+        <item>15</item>
+        <item>@drawable/tricep_kickbacks</item>
+    </array>
+    <array name="weighted_punches">
+        <item>Weighted Punches</item>
+        <item>15</item>
+        <item>@drawable/weighted_punches</item>
+    </array>
+    <array name="punches">
+        <item>Punches</item>
+        <item>15</item>
+        <item>@drawable/punches</item>
+    </array>
+    <array name="flutter_kicks">
+     <item>Flutter Kicks</item>
+        <item>15</item>
+        <item>@drawable/flutter_kicks</item>
+    </array>
+    <array name="side_lunge">
+        <item>Side Lunges</item>
+        <item>15</item>
+        <item>@drawable/side_lunge</item>
+    </array>
+    <array name="calf_raises">
+        <item>Calf Raises</item>
+        <item>15</item>
+        <item>@drawable/calf_raises</item>
+    </array>
+    <array name="wall_sits">
+        <item>Wall Sits</item>
+        <item>15</item>
+        <item>@drawable/wall_sits</item>
+    </array>
+    <array name="reverse_lunges">
+        <item>Reverse Lunges</item>
+        <item>15</item>
+        <item>@drawable/reverse_lunges</item>
+    </array>
+    <array name="jumping_jacks">
+        <item>Jumping Jacks</item>
+        <item>15</item>
+        <item>@drawable/jumping_jacks</item>
+    </array>
+
 </resources>
