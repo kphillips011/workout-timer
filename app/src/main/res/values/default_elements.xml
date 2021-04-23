@@ -165,7 +165,7 @@
     <item>Leg Hold</item>
     <item>15</item>
     <item>@drawable/leg_hold</item>
-</array>
+    </array>
     <array name="arm_circles">
         <item>Arm Circles</item>
         <item>15</item>

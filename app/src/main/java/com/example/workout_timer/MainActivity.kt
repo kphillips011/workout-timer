@@ -1,15 +1,12 @@
 package com.example.workout_timer
 
-import android.content.Context
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.TypedArray
-import android.database.Cursor
-import android.graphics.Bitmap
 import android.net.Uri
-import android.opengl.Visibility
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.MediaStore.*
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -17,12 +14,13 @@ import android.view.animation.AnimationUtils
 import android.view.animation.TranslateAnimation
 import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.drawable.toBitmap
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import java.io.IOException
 
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
@@ -48,6 +46,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private val pickImage = 0
     private var imageUri: Uri? = null
 
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -85,23 +85,29 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         // add elements to routineList, sample data
         val defaultWorkoutsArray: TypedArray = resources.obtainTypedArray(R.array.default_workout_names)
         var defaultWorkoutNames: MutableList<String?> = mutableListOf<String?>()
-        var defaultWorkout: TypedArray
+        var workouts: MutableList<Routine> = mutableListOf<Routine>()
+        var item: TypedArray
 
         for (i in 0 until defaultWorkoutsArray.length()) {
             val res = defaultWorkoutsArray.getResourceId(i, -1)
             if (res < 0) { continue }
-            defaultWorkout = resources.obtainTypedArray(res)
-            defaultWorkoutNames.add(defaultWorkout.getString(0))
+            item = resources.obtainTypedArray(res)
+            val itemName = item.getString(0)
+            //itemNames.add(itemName)
+            var tempElements: MutableList<RoutineElement> = mutableListOf<RoutineElement>()
+            for (e in 1 until item.length()) {
+                val elementRes = item.getResourceId(e, -1)
+                if (elementRes < 0) { continue }
+                val elementArray = resources.obtainTypedArray(elementRes)
+                val elementName = elementArray.getString(0)
+                val elementDuration = elementArray.getString(1)?.toInt()
+                val elementDrawable = elementArray.getDrawable(2)
+                tempElements.add(RoutineElement(elementName, elementDuration, elementDrawable))
+            }
+            workouts.add(Routine(tempElements, itemName))
         }
 
-        for (workout in defaultWorkoutNames) {
-            routineList.add(
-                Routine(
-                    mutableListOf(RoutineElement("element", 10)),
-                    workout as String
-                )
-            )
-        }
+        for (workout in workouts) { routineList.add(workout) }
 
         // adapter to adapt the routineList into our list on the main screen
         routineListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, routineList)
@@ -112,8 +118,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             if(allFabsVisible) { closeFab() }
             val selectedWorkout = routineList[i]
             // set toolbar title to be the routine's name
-            (this as? AppCompatActivity)?.supportActionBar?.title = selectedWorkout.getName()
-            elementsList = selectedWorkout.getElements()
+            (this as? AppCompatActivity)?.supportActionBar?.title = selectedWorkout.name
+            elementsList = selectedWorkout.elements
             elementsListAdapter = ArrayAdapter(
                 this,
                 android.R.layout.simple_list_item_1,
@@ -123,10 +129,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             viewSwitcher.showNext()
 
             elementsListView.setOnItemClickListener { _, _, i, _ ->
-                // TODO fill elementDetailsView with element details, image etc
                 val selectedElement = elementsList[i]
-                detailsText.text = selectedElement.getName() + "\nfor " + selectedElement.getDuration() + " seconds"
-                detailsImage.setImageResource(R.drawable.downward_dog)
+                detailsText.text = selectedElement.name + "\nfor " + selectedElement.duration + " seconds"
+                detailsImage.setImageDrawable(selectedElement.image)
 
                 // slide view up
                 if (!elementDetailsUp) {
@@ -245,27 +250,44 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         presetFab.setOnClickListener { view ->
             // TODO
+            val elementNamesArray: TypedArray = resources.obtainTypedArray(R.array.default_element_names)
+            var elementNames: MutableList<String?> = mutableListOf<String?>()
+            var itemElements: MutableList<RoutineElement> = mutableListOf<RoutineElement>()
+            var elementArray: TypedArray
+
+            for (i in 0 until elementNamesArray.length()) {
+                val elementRes = elementNamesArray.getResourceId(i, -1)
+                if (elementRes < 0) { continue }
+                elementArray = resources.obtainTypedArray(elementRes)
+                val elementName = elementArray.getString(0)
+                elementNames.add(elementName)
+                val elementDuration = elementArray.getString(1)?.toInt()
+                val elementDrawable = elementArray.getDrawable(2)
+                itemElements.add(RoutineElement(elementName, elementDuration, elementDrawable))
+            }
+
             val workoutNamesArray: TypedArray = resources.obtainTypedArray(R.array.default_workout_names)
             var itemNames: MutableList<String?> = mutableListOf<String?>()
+            var items: MutableList<Routine> = mutableListOf<Routine>()
             var item: TypedArray
 
             for (i in 0 until workoutNamesArray.length()) {
                 val res = workoutNamesArray.getResourceId(i, -1)
                 if (res < 0) { continue }
                 item = resources.obtainTypedArray(res)
-                itemNames.add(item.getString(0))
-            }
-
-            val elementNamesArray: TypedArray = resources.obtainTypedArray(R.array.default_element_names)
-            var elementNames: MutableList<String?> = mutableListOf<String?>()
-            var itemElements: MutableList<RoutineElement> = mutableListOf<RoutineElement>()
-            var arrayElement: TypedArray
-
-            for (i in 0 until elementNamesArray.length()) {
-                val elementRes = elementNamesArray.getResourceId(i, -1)
-                if (elementRes < 0) { continue }
-                arrayElement = resources.obtainTypedArray(elementRes)
-                elementNames.add(arrayElement.getString(0))
+                val itemName = item.getString(0)
+                itemNames.add(itemName)
+                var tempElements: MutableList<RoutineElement> = mutableListOf<RoutineElement>()
+                for (e in 1 until item.length()) {
+                    val elementRes = item.getResourceId(e, -1)
+                    if (elementRes < 0) { continue }
+                    elementArray = resources.obtainTypedArray(elementRes)
+                    val elementName = elementArray.getString(0)
+                    val elementDuration = elementArray.getString(1)?.toInt()
+                    val elementDrawable = elementArray.getDrawable(2)
+                    tempElements.add(RoutineElement(elementName, elementDuration, elementDrawable))
+                }
+                items.add(Routine(tempElements, itemName))
             }
 
             if (viewSwitcher.currentView.equals(routineListView)) {
@@ -276,7 +298,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
                 var spinner: Spinner = dialogLayout.findViewById(R.id.preset_spinner)
                 val spinnerAdapter = ArrayAdapter(
-                    this, android.R.layout.simple_spinner_item, itemNames
+                    this, android.R.layout.simple_spinner_item, items
                 ).also { adapter ->
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                         spinner.adapter = adapter
@@ -286,16 +308,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 workoutBuilder.setView(dialogLayout)
                 // TODO add elements of preset
                 workoutBuilder.setPositiveButton("OK") { dialogInterface, i ->
-                    val workoutName = spinner.selectedItem
-                    /*
-                    var elementItem: TypedArray
-                    for (e in 1 until workoutName.length()) {
-                        val elementRes = item.getResourceId(e, -1)
-                        if (elementRes < 0) { continue }
-                        elementItem = resources.obtainTypedArray(elementRes)
-                    }
-                     */
-                    routineList.add(Routine(itemElements, workoutName as String))
+                    val workout = spinner.selectedItem as Routine
+                    //val workoutName = workout.name
+                    routineList.add(workout)
                     routineListAdapter.notifyDataSetChanged()
                     Snackbar.make(routineListView, "Added new workout", Snackbar.LENGTH_LONG)
                         .setAction("DISMISS") {}
@@ -312,7 +327,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
                 var spinner: Spinner = dialogLayout.findViewById(R.id.preset_spinner)
                 val spinnerAdapter = ArrayAdapter(
-                    this, android.R.layout.simple_spinner_item, elementNames
+                    this, android.R.layout.simple_spinner_item, itemElements
                 ).also { adapter ->
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     spinner.adapter = adapter
@@ -322,9 +337,11 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 elementBuilder.setView(dialogLayout)
                 elementBuilder.setPositiveButton("OK") { dialogInterface, i ->
                     // TODO add to elements list with specific duration
-                    val elementName = spinner.selectedItem
-                    val elementDuration = 0
-                    elementsList.add(RoutineElement(elementName as String, elementDuration))
+                    val element = spinner.selectedItem as RoutineElement
+                    val elementName = element.name
+                    val elementDuration = element.duration
+                    val elementImage = element.image
+                    elementsList.add(RoutineElement(elementName as String, elementDuration, elementImage))
                     elementsListAdapter.notifyDataSetChanged()
                     Snackbar.make(elementsListView, "Added new element", Snackbar.LENGTH_LONG)
                         .setAction("DISMISS") {}
@@ -391,6 +408,21 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         detailsImage.isClickable = true
     }
 
+    // ref: https://stackoverflow.com/questions/14433096/allow-the-user-to-insert-an-image-in-android-app
+    //      https://www.tutorialspoint.com/how-to-pick-an-image-from-an-image-gallery-on-android-using-kotlin
+    fun selectImage(view: View) {
+        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+        startActivityForResult(gallery, pickImage)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == pickImage) {
+            imageUri = data?.data
+            detailsImage.setImageURI(imageUri)
+        }
+    }
+
     // if android back button is pressed while on the elements list, we want
     // to go back to the main screen where the routine list is displayed
     override fun onBackPressed() {
@@ -408,21 +440,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             }
         }
         else { this.finish() }
-    }
-
-    // ref: https://stackoverflow.com/questions/14433096/allow-the-user-to-insert-an-image-in-android-app
-    //      https://www.tutorialspoint.com/how-to-pick-an-image-from-an-image-gallery-on-android-using-kotlin
-    fun selectImage(view: View) {
-        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-        startActivityForResult(gallery, pickImage)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && requestCode == pickImage) {
-            imageUri = data?.data
-            detailsImage.setImageURI(imageUri)
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
