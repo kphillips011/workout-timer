@@ -129,6 +129,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             viewSwitcher.showNext()
 
             elementsListView.setOnItemClickListener { _, _, i, _ ->
+                // TODO fix image upload
                 val selectedElement = elementsList[i]
                 detailsText.text = selectedElement.name + "\nfor " + selectedElement.duration + " seconds"
                 detailsImage.setImageDrawable(selectedElement.image)
@@ -249,7 +250,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
 
         presetFab.setOnClickListener { view ->
-            // TODO
             val elementNamesArray: TypedArray = resources.obtainTypedArray(R.array.default_element_names)
             var elementNames: MutableList<String?> = mutableListOf<String?>()
             var itemElements: MutableList<RoutineElement> = mutableListOf<RoutineElement>()
@@ -306,7 +306,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
                 spinner.onItemSelectedListener = this
                 workoutBuilder.setView(dialogLayout)
-                // TODO add elements of preset
                 workoutBuilder.setPositiveButton("OK") { dialogInterface, i ->
                     val workout = spinner.selectedItem as Routine
                     //val workoutName = workout.name
@@ -336,7 +335,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 spinner.onItemSelectedListener = this
                 elementBuilder.setView(dialogLayout)
                 elementBuilder.setPositiveButton("OK") { dialogInterface, i ->
-                    // TODO add to elements list with specific duration
                     val element = spinner.selectedItem as RoutineElement
                     val elementName = element.name
                     val elementDuration = element.duration
