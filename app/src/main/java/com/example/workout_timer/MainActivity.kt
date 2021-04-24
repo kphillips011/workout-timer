@@ -17,7 +17,6 @@ import android.widget.AdapterView.OnItemLongClickListener
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.drawable.toBitmap
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -46,7 +45,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private val pickImage = 0
     private var imageUri: Uri? = null
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,15 +119,14 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             (this as? AppCompatActivity)?.supportActionBar?.title = selectedWorkout.name
             elementsList = selectedWorkout.elements
             elementsListAdapter = ArrayAdapter(
-                this,
-                android.R.layout.simple_list_item_1,
-                elementsList
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    elementsList
             )
             elementsListView.adapter = elementsListAdapter
             viewSwitcher.showNext()
 
             elementsListView.setOnItemClickListener { _, _, i, _ ->
-                // TODO fix image upload
                 val selectedElement = elementsList[i]
                 detailsText.text = selectedElement.name + "\nfor " + selectedElement.duration + " seconds"
                 detailsImage.setImageDrawable(selectedElement.image)
@@ -145,6 +142,11 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     elementDetailsView.visibility = View.VISIBLE
                     slideUpDetails(elementDetailsView)
                     elementDetailsUp = true
+                }
+
+                detailsImage.setOnClickListener() {
+                    // TODO fix image upload
+                    selectImage(detailsImage)
                 }
             }
 
@@ -211,10 +213,10 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 workoutBuilder.setView(dialogLayout)
                 workoutBuilder.setPositiveButton("OK") { dialogInterface, i ->
                     routineList.add(
-                        Routine(
-                            mutableListOf<RoutineElement>(),
-                            editTextName.text.toString()
-                        )
+                            Routine(
+                                    mutableListOf<RoutineElement>(),
+                                    editTextName.text.toString()
+                            )
                     )
                     routineListAdapter.notifyDataSetChanged()
                     Snackbar.make(routineListView, "Added new workout", Snackbar.LENGTH_LONG)
@@ -234,10 +236,10 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 elementBuilder.setView(dialogLayout)
                 elementBuilder.setPositiveButton("OK") { dialogInterface, i ->
                     elementsList.add(
-                        RoutineElement(
-                            editTextName.text.toString(),
-                            editTextDuration.text.toString().toInt()
-                        )
+                            RoutineElement(
+                                    editTextName.text.toString(),
+                                    editTextDuration.text.toString().toInt()
+                            )
                     )
                     elementsListAdapter.notifyDataSetChanged()
                     Snackbar.make(elementsListView, "Added new element", Snackbar.LENGTH_LONG)
@@ -298,7 +300,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
                 var spinner: Spinner = dialogLayout.findViewById(R.id.preset_spinner)
                 val spinnerAdapter = ArrayAdapter(
-                    this, android.R.layout.simple_spinner_item, items
+                        this, android.R.layout.simple_spinner_item, items
                 ).also { adapter ->
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                         spinner.adapter = adapter
@@ -326,7 +328,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
                 var spinner: Spinner = dialogLayout.findViewById(R.id.preset_spinner)
                 val spinnerAdapter = ArrayAdapter(
-                    this, android.R.layout.simple_spinner_item, itemElements
+                        this, android.R.layout.simple_spinner_item, itemElements
                 ).also { adapter ->
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     spinner.adapter = adapter
@@ -380,10 +382,10 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     // slide the view from its current position to below itself
     private fun slideDownDetails(view: View) {
         val animate = TranslateAnimation(
-            0F,  // fromXDelta
-            0F,  // toXDelta
-            0F,  // fromYDelta
-            view.height.toFloat()
+                0F,  // fromXDelta
+                0F,  // toXDelta
+                0F,  // fromYDelta
+                view.height.toFloat()
         ) // toYDelta
         animate.duration = 500
         animate.fillAfter = true
@@ -395,10 +397,10 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private fun slideUpDetails(view: View) {
         view.visibility = View.VISIBLE
         val animate = TranslateAnimation(
-            0F,  // fromXDelta
-            0F,  // toXDelta
-            view.height.toFloat(),  // fromYDelta
-            0F
+                0F,  // fromXDelta
+                0F,  // toXDelta
+                view.height.toFloat(),  // fromYDelta
+                0F
         ) // toYDelta
         animate.duration = 500
         animate.fillAfter = true
@@ -417,7 +419,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == pickImage) {
             imageUri = data?.data
-            detailsImage.setImageURI(imageUri)
         }
     }
 
