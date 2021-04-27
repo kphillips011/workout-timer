@@ -3,6 +3,7 @@ package com.example.workout_timer
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.TypedArray
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -20,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
@@ -44,7 +47,10 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private var allFabsVisible: Boolean = false
     private val pickImage = 0
     private var imageUri: Uri? = null
+    private lateinit var selectedWorkout: Routine
+    private lateinit var selectedElement: RoutineElement
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,7 +120,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         routineListView.setOnItemClickListener { _, routineListView, i, _ ->
             playButton.isVisible = true
             if(allFabsVisible) { closeFab() }
-            val selectedWorkout = routineList[i]
+            selectedWorkout = routineList[i]
             // set toolbar title to be the routine's name
             (this as? AppCompatActivity)?.supportActionBar?.title = selectedWorkout.name
             elementsList = selectedWorkout.elements
@@ -127,22 +133,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             viewSwitcher.showNext()
 
             elementsListView.setOnItemClickListener { _, _, i, _ ->
-                val selectedElement = elementsList[i]
-                detailsText.text = selectedElement.name + "\nfor " + selectedElement.duration + " seconds"
-                detailsImage.setImageDrawable(selectedElement.image)
-
-                // slide view up
-                if (!elementDetailsUp) {
-                    if (allFabsVisible) {
-                        closeFab()
-                    }
-                    fab.visibility = View.GONE
-                    detailsText.visibility = View.VISIBLE
-                    detailsImage.visibility = View.VISIBLE
-                    elementDetailsView.visibility = View.VISIBLE
-                    slideUpDetails(elementDetailsView)
-                    elementDetailsUp = true
-                }
+                selectedElement = elementsList[i]
+                slideUpDetails(elementDetailsView, selectedElement)
 
                 detailsImage.setOnClickListener() {
                     // TODO fix image upload
@@ -238,7 +230,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     elementsList.add(
                             RoutineElement(
                                     editTextName.text.toString(),
-                                    editTextDuration.text.toString().toInt()
+                                    editTextDuration.text.toString().toInt(),
+                                    applicationContext
                             )
                     )
                     elementsListAdapter.notifyDataSetChanged()
@@ -380,7 +373,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     }
 
     // slide the view from its current position to below itself
-    private fun slideDownDetails(view: View) {
+    private fun slideDownDetails(view: View, element: RoutineElement) {
         val animate = TranslateAnimation(
                 0F,  // fromXDelta
                 0F,  // toXDelta
@@ -394,18 +387,32 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         detailsImage.isClickable = false
     }
 
-    private fun slideUpDetails(view: View) {
-        view.visibility = View.VISIBLE
-        val animate = TranslateAnimation(
-                0F,  // fromXDelta
-                0F,  // toXDelta
-                view.height.toFloat(),  // fromYDelta
-                0F
-        ) // toYDelta
-        animate.duration = 500
-        animate.fillAfter = true
-        view.startAnimation(animate)
-        detailsImage.isClickable = true
+    private fun slideUpDetails(view: View, element: RoutineElement) {
+        detailsText.text = element.name + "\nfor " + element.duration + " seconds"
+        detailsImage.setImageDrawable(element.image)
+
+        // slide view up
+        if (!elementDetailsUp) {
+            if (allFabsVisible) {
+                closeFab()
+            }
+            fab.visibility = View.GONE
+            detailsText.visibility = View.VISIBLE
+            detailsImage.visibility = View.VISIBLE
+            elementDetailsView.visibility = View.VISIBLE
+            view.visibility = View.VISIBLE
+            val animate = TranslateAnimation(
+                    0F,  // fromXDelta
+                    0F,  // toXDelta
+                    view.height.toFloat(),  // fromYDelta
+                    0F
+            ) // toYDelta
+            animate.duration = 500
+            animate.fillAfter = true
+            view.startAnimation(animate)
+            detailsImage.isClickable = true
+            elementDetailsUp = true
+        }
     }
 
     // ref: https://stackoverflow.com/questions/14433096/allow-the-user-to-insert-an-image-in-android-app
@@ -419,6 +426,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == pickImage) {
             imageUri = data?.data
+            val inputStream = imageUri?.let { contentResolver.openInputStream(it) }
+            selectedElement.image = Drawable.createFromStream(inputStream, imageUri.toString())
             detailsImage.setImageURI(imageUri)
         }
     }
@@ -429,7 +438,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         if(allFabsVisible) { closeFab() }
         if (viewSwitcher.currentView.equals(elementsListView)) {
             if (elementDetailsUp) {
-                slideDownDetails(elementDetailsView)
+                slideDownDetails(elementDetailsView, selectedElement)
                 elementDetailsUp = false
                 fab.visibility = View.VISIBLE
             } else {
@@ -450,14 +459,41 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         return true
     }
 
+    // TODO play a workout when play button selected. Need Timer.java completed first
+    private fun runPlayButton(workout: Routine) {
+        for (element: RoutineElement in workout.elements) {
+            val runDuration = element.duration?.toLong()?.times(1000)
+            if (runDuration != null) {
+                slideUpDetails(elementDetailsView, element)
+                Thread.sleep(runDuration)
+                slideDownDetails(elementDetailsView, element)
+            }
+        }
+    }
+        /*
+        var tasks: ArrayList<TimerTask> = ArrayList<TimerTask>()
+        val timer = RoutineTimer(workout)
+        for (element: RoutineElement in workout.elements) {
+            timer.totalDuration += element.duration!!
+            var task: TimerTask = TimerTask()
+            tasks.add()
+        }
+        timer.scheduleTasks(tasks)
+        timer.run()
+
+         */
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_settings -> true
+            R.id.play_button -> {
+                runPlayButton(selectedWorkout)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
-            // TODO play a workout when play button selected. Need Timer.java completed first
         }
     }
 }
