@@ -55,7 +55,7 @@
         <item>@array/mountain_climbers</item>
         <item>@array/leg_hold</item>
         <item>@array/leg_lift</item>
-        <item>side_leg_lift</item>
+        <item>@array/side_leg_lift</item>
         <item>@array/plank</item>
     </array>
     <array name = "get_swol">

@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
@@ -21,8 +22,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import java.util.*
-import kotlin.collections.ArrayList
+
 
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         // ref: https://stackoverflow.com/questions/19765938/show-and-hide-a-view-with-a-slide-up-down-animation
         elementDetailsView = findViewById<LinearLayout>(R.id.element_details)
         elementDetailsView.visibility = View.INVISIBLE
-        detailsText = findViewById(R.id.details_text_view);
+        detailsText = findViewById(R.id.details_text_view)
         detailsImage = findViewById(R.id.details_image_view)
         detailsText.visibility = View.GONE
         detailsImage.visibility = View.GONE
@@ -88,18 +88,20 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         // add elements to routineList, sample data
         val defaultWorkoutsArray: TypedArray = resources.obtainTypedArray(R.array.default_workout_names)
-        var defaultWorkoutNames: MutableList<String?> = mutableListOf<String?>()
+        // var defaultWorkoutNames: MutableList<String?> = mutableListOf<String?>()        can safely delete later
         var workouts: MutableList<Routine> = mutableListOf<Routine>()
         var item: TypedArray
 
-        for (i in 0 until defaultWorkoutsArray.length()) {
+        val defaultWorkoutsArrayLength = defaultWorkoutsArray.length() // optimization
+        for (i in 0 until defaultWorkoutsArrayLength) {
             val res = defaultWorkoutsArray.getResourceId(i, -1)
             if (res < 0) { continue }
             item = resources.obtainTypedArray(res)
             val itemName = item.getString(0)
-            //itemNames.add(itemName)
+
             var tempElements: MutableList<RoutineElement> = mutableListOf<RoutineElement>()
-            for (e in 1 until item.length()) {
+            val itemLength = item.length() // optimization
+            for (e in 1 until itemLength) {
                 val elementRes = item.getResourceId(e, -1)
                 if (elementRes < 0) { continue }
                 val elementArray = resources.obtainTypedArray(elementRes)
@@ -107,9 +109,12 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 val elementDuration = elementArray.getString(1)?.toInt()
                 val elementDrawable = elementArray.getDrawable(2)
                 tempElements.add(RoutineElement(elementName, elementDuration, elementDrawable))
+                elementArray.recycle()
             }
             workouts.add(Routine(tempElements, itemName))
+            item.recycle()
         }
+        defaultWorkoutsArray.recycle()
 
         for (workout in workouts) { routineList.add(workout) }
 
@@ -117,7 +122,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         routineListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, routineList)
         routineListView.adapter = routineListAdapter
 
-        routineListView.setOnItemClickListener { _, routineListView, i, _ ->
+        routineListView.setOnItemClickListener { _, _, i, _ ->
             playButton.isVisible = true
             if(allFabsVisible) { closeFab() }
             selectedWorkout = routineList[i]
@@ -266,14 +271,16 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             var items: MutableList<Routine> = mutableListOf<Routine>()
             var item: TypedArray
 
-            for (i in 0 until workoutNamesArray.length()) {
+            val workoutNamesArrayLength = workoutNamesArray.length() // optimization
+            for (i in 0 until workoutNamesArrayLength) {
                 val res = workoutNamesArray.getResourceId(i, -1)
                 if (res < 0) { continue }
                 item = resources.obtainTypedArray(res)
                 val itemName = item.getString(0)
                 itemNames.add(itemName)
                 var tempElements: MutableList<RoutineElement> = mutableListOf<RoutineElement>()
-                for (e in 1 until item.length()) {
+                val itemLength = item.length() // optimization
+                for (e in 1 until itemLength) {
                     val elementRes = item.getResourceId(e, -1)
                     if (elementRes < 0) { continue }
                     elementArray = resources.obtainTypedArray(elementRes)
@@ -281,9 +288,12 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     val elementDuration = elementArray.getString(1)?.toInt()
                     val elementDrawable = elementArray.getDrawable(2)
                     tempElements.add(RoutineElement(elementName, elementDuration, elementDrawable))
+                    elementArray.recycle()
                 }
                 items.add(Routine(tempElements, itemName))
+                item.recycle()
             }
+            workoutNamesArray.recycle()
 
             if (viewSwitcher.currentView.equals(routineListView)) {
                 val workoutBuilder = AlertDialog.Builder(this)
@@ -373,7 +383,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     }
 
     // slide the view from its current position to below itself
-    private fun slideDownDetails(view: View, element: RoutineElement) {
+    private fun slideDownDetails(view: View) {
         val animate = TranslateAnimation(
                 0F,  // fromXDelta
                 0F,  // toXDelta
@@ -438,7 +448,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         if(allFabsVisible) { closeFab() }
         if (viewSwitcher.currentView.equals(elementsListView)) {
             if (elementDetailsUp) {
-                slideDownDetails(elementDetailsView, selectedElement)
+                slideDownDetails(elementDetailsView)
                 elementDetailsUp = false
                 fab.visibility = View.VISIBLE
             } else {
@@ -460,15 +470,33 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     }
 
     // TODO play a workout when play button selected. Need Timer.java completed first
-    private fun runPlayButton(workout: Routine) {
-        for (element: RoutineElement in workout.elements) {
-            val runDuration = element.duration?.toLong()?.times(1000)
-            if (runDuration != null) {
-                slideUpDetails(elementDetailsView, element)
-                Thread.sleep(runDuration)
-                slideDownDetails(elementDetailsView, element)
+    private fun runPlayButton(workout: MutableList<RoutineElement>, index : Int) {
+        if (workout.isEmpty()) { this.finish() }
+        var i = index
+        val max = workout.size
+        var element = workout[i]
+        playButton.isEnabled = false
+        slideUpDetails(elementDetailsView, element)
+        var elapsedTime: Int = 0
+        val timer = object : CountDownTimer(element.duration?.times(1000)?.toLong()!!, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val remainingTime: Int = (millisUntilFinished / 1000).toInt()
+                detailsText.text = "$element \nfor $remainingTime seconds"
+                detailsImage.setImageDrawable(element.image)
+                elapsedTime += 1
             }
-        }
+
+            override fun onFinish() {
+                if (i < max - 1) {
+                    i += 1
+                    runPlayButton(workout, i)
+                } else {
+                    slideDownDetails(elementDetailsView)
+                    //slideDownDetails(elementDetailsView, element)
+                    playButton.isEnabled = true
+                }
+            }
+        }.start()
     }
         /*
         var tasks: ArrayList<TimerTask> = ArrayList<TimerTask>()
@@ -480,17 +508,19 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
         timer.scheduleTasks(tasks)
         timer.run()
-
          */
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(item:MenuItem) : Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_settings -> true
             R.id.play_button -> {
-                runPlayButton(selectedWorkout)
+                if (viewSwitcher.currentView.equals(elementsListView)) {
+                    var workout: MutableList<RoutineElement> = selectedWorkout.elements
+                    runPlayButton(workout, 0)
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
