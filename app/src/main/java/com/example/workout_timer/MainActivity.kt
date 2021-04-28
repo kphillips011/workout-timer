@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
+
         fab = findViewById(R.id.fab)
         presetFab = findViewById(R.id.add_preset_fab)
         customFab = findViewById(R.id.add_custom_fab)
