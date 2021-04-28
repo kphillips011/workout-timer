@@ -27,7 +27,7 @@ class Routine(var elements: MutableList<RoutineElement>, var name: String?) {
 class RoutineElement(var name: String?, var duration: Int?, var image: Drawable?) {
     // additional constructor to add drawable image, used for preset selection
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(name: String?, duration: Int?, context: Context) : this(name, duration, context.getDrawable(R.drawable.downward_dog))
+    constructor(name: String?, duration: Int?, context: Context) : this(name, duration, context.getDrawable(R.drawable.upload))
     private val identifier: String? = this.name
     fun rename(newName: String?) { name = newName }
     fun editDuration(newDuration: Int?) { duration = newDuration }
