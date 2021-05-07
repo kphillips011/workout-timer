@@ -32,5 +32,13 @@
 
 
 
+## **Testing Procedure**
+- We plan to implement Unit and Instrumented tests, but our primary testing method as of right now is manual testing.
+- If the user presses the Extended Floating Action Button, the button should expand into two Floating Action Buttons giving the option to either add a preset or custom workout/element depending on the View they are on.
+- If the user presses the "play" button on any workout's page, the workout should be played in order of the elements listed.
+- If the user uploads an image for an element in particular workout, the image should stay attached to that element for the duration of the app session.
+
+
+
 ## **License**
 - MIT
